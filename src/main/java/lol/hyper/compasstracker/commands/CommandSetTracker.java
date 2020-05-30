@@ -16,11 +16,15 @@ public class CommandSetTracker implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args[0].equalsIgnoreCase("setplayer")) {
             if (sender.hasPermission("compasstracker.setplayer")) {
-                if (Bukkit.getPlayerExact(args[1]) == null) {
-                    sender.sendMessage(ChatColor.RED + "That player does not exist.");
+                if (CompassTracker.getInstance().gameStarted) {
+                    sender.sendMessage(ChatColor.RED + "Cannot set player. There is a game right now.");
                 } else {
-                    CompassTracker.getInstance().speedrunner = Bukkit.getPlayerExact(args[1]);
-                    sender.sendMessage(ChatColor.GREEN + args[1] + " has been set as the target player.");
+                    if (Bukkit.getPlayerExact(args[1]) == null) {
+                        sender.sendMessage(ChatColor.RED + "That player does not exist.");
+                    } else {
+                        CompassTracker.getInstance().speedrunner = Bukkit.getPlayerExact(args[1]);
+                        sender.sendMessage(ChatColor.GREEN + args[1] + " has been set as the target player.");
+                    }
                 }
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permissions to set the player.");
