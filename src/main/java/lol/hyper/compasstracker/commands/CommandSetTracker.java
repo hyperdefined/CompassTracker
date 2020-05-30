@@ -69,11 +69,15 @@ public class CommandSetTracker implements CommandExecutor {
             }
         } else if (args[0].equalsIgnoreCase("removeplayer")) {
             if (sender.hasPermission("compasstracker.removeplayer")) {
-                if (CompassTracker.getInstance().speedrunner == null) {
-                    sender.sendMessage(ChatColor.RED + "Cannot remove player. There is not one set.");
+                if (CompassTracker.getInstance().gameStarted) {
+                    sender.sendMessage(ChatColor.RED + "Cannot remove player. There is a game right now!");
                 } else {
-                    sender.sendMessage(ChatColor.GREEN + CompassTracker.getInstance().speedrunner.getName() + " has been removed.");
-                    CompassTracker.getInstance().speedrunner = null;
+                    if (CompassTracker.getInstance().speedrunner == null) {
+                        sender.sendMessage(ChatColor.RED + "Cannot remove player. There is not one set.");
+                    } else {
+                        sender.sendMessage(ChatColor.GREEN + CompassTracker.getInstance().speedrunner.getName() + " has been removed.");
+                        CompassTracker.getInstance().speedrunner = null;
+                    }
                 }
             } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission remove player from being tracked.");
