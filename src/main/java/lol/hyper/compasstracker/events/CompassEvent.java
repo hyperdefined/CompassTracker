@@ -25,7 +25,7 @@ public class CompassEvent implements Listener {
                             player.sendMessage(ChatColor.RED + "Tracker only works in the overworld!");
                         } else {
                             player.setCompassTarget(CompassTracker.getInstance().location);
-                            player.sendMessage(ChatColor.GREEN + "Now tracking " + CompassTracker.getInstance().speedrunner.getName() + ".");
+                            player.sendMessage(ChatColor.GREEN + "Updating location of " + CompassTracker.getInstance().speedrunner.getName() + ".");
                         }
                     } else {
                         player.sendMessage(ChatColor.RED + "You haven't set a player! Do /settracker <player>.");
