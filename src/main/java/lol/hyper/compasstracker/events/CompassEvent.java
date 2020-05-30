@@ -19,7 +19,7 @@ public class CompassEvent implements Listener {
 
         if (action.equals( Action.RIGHT_CLICK_AIR ) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
             if (item != null && item.getType() == Material.COMPASS) {
-                if (item.getItemMeta().getDisplayName().contains("[Tracker]")) {
+                if (item.getItemMeta().getDisplayName().contains("[Tracker]") && CompassTracker.getInstance().gameStarted) {
                     if (CompassTracker.getInstance().speedrunner != null) {
                         if (!CompassTracker.getInstance().location.getWorld().getName().equals("world")) {
                             player.sendMessage(ChatColor.RED + "Tracker only works in the overworld!");

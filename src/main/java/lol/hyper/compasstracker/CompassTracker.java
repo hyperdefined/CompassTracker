@@ -1,8 +1,8 @@
 package lol.hyper.compasstracker;
 
 import lol.hyper.compasstracker.commands.CommandSetTracker;
-import lol.hyper.compasstracker.commands.CommandGiveCompass;
 import lol.hyper.compasstracker.events.CompassEvent;
+import lol.hyper.compasstracker.events.PlayerRespawn;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,13 +13,14 @@ public final class CompassTracker extends JavaPlugin {
     public Player speedrunner;
     private static CompassTracker instance;
     public Location location;
+    public boolean gameStarted = false;
 
     @Override
     public void onEnable() {
         instance = this;
         Bukkit.getPluginManager().registerEvents(new CompassEvent(), this);
-        this.getCommand("settracker").setExecutor(new CommandSetTracker());
-        this.getCommand("givecompass").setExecutor(new CommandGiveCompass());
+        Bukkit.getPluginManager().registerEvents(new PlayerRespawn(), this);
+        this.getCommand("ct").setExecutor(new CommandSetTracker());
     }
 
     @Override

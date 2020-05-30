@@ -5,8 +5,12 @@ api-version: 1.15
 permission:
   compasstracker.start:
     default: op
+  compasstracker.setplayer:
+    default: op
+  compasstracker.stop:
+    default: op
+  compasstracker.removeplayer:
+    default: op
 commands:
-  settracker:
-    usage: /settracker
-  givecompass:
-    usage: /givecompass
+  ct:
+    usage: /ct
