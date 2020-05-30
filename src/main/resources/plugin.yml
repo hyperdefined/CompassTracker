@@ -1,0 +1,12 @@
+name: CompassTracker
+version: ${project.version}
+main: lol.hyper.compasstracker.CompassTracker
+api-version: 1.15
+permission:
+  compasstracker.start:
+    default: op
+commands:
+  settracker:
+    usage: /settracker
+  givecompass:
+    usage: /givecompass
