@@ -17,7 +17,7 @@ public class PlayerRespawn implements Listener {
         if (CompassTracker.getInstance().gameStarted && player != CompassTracker.getInstance().speedrunner) {
             ItemStack compass = new ItemStack(Material.COMPASS);
             ItemMeta meta = compass.getItemMeta();
-            meta.setDisplayName("[Tracker]");
+            meta.setDisplayName("[Compass Tracker]");
             compass.setItemMeta(meta);
             player.getInventory().addItem(compass);
         }
