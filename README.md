@@ -19,3 +19,17 @@ For Minecraft 1.15 and above.
 4. Use /ct start to start the game. Hunters will receive the tracking compass. You must have the player and at least 1 hunter set.
 5. Right click the compass to get their location. You will have to manually click it to update the compass. The compass will not point to the live location.
 6. Use /ct stop to stop the game.
+
+# Permissions
+- compasstracker.start
+    - /ct start
+- compasstracker.stop
+    - /ct stop
+- compasstracker.setplayer
+    - /ct setplayer
+- compasstracker.removeplayer
+    - /ct removeplayer
+- compasstracker.addhunter
+    - /ct addhunter
+- compasstracker.removehunter
+    - /ct removehunter
