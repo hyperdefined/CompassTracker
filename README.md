@@ -1,6 +1,8 @@
 # Compass Tracker
 A hunter vs. speedrunner plugin for servers.
 
+For Minecraft 1.15 and above.
+
 # Features
 - Track a certain player's location via a special compass. Right click the special compass to get their updated location.
 - Commands to start and stop the game.
