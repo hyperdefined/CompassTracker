@@ -9,12 +9,15 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+
 public final class CompassTracker extends JavaPlugin {
 
     public Player speedrunner;
     private static CompassTracker instance;
     public Location location;
     public boolean gameStarted = false;
+    public ArrayList<Player> hunters = new ArrayList<>();
 
     @Override
     public void onEnable() {

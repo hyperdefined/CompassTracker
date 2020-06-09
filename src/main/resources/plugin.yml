@@ -1,5 +1,5 @@
 name: CompassTracker
-version: ${project.version}
+version: 1.0
 main: lol.hyper.compasstracker.CompassTracker
 api-version: 1.15
 permission:
@@ -10,6 +10,10 @@ permission:
   compasstracker.stop:
     default: op
   compasstracker.removeplayer:
+    default: op
+  compasstracker.addhunter:
+    default: op
+  compasstracker.removehunter:
     default: op
 commands:
   ct:
