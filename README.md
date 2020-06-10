@@ -1,4 +1,4 @@
-# Compass Tracker
+# CompassTracker
 [![Downloads](https://img.shields.io/github/downloads/hyperdefined/CompassTracker/total?logo=github)](https://github.com/hyperdefined/CompassTracker/releases)
 
 A hunter vs. speedrunner plugin for servers.
