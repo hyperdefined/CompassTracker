@@ -13,11 +13,15 @@ import java.util.ArrayList;
 
 public final class CompassTracker extends JavaPlugin {
 
-    public Player speedrunner;
     private static CompassTracker instance;
+    public Player speedrunner;
     public Location location;
     public boolean gameStarted = false;
     public ArrayList<Player> hunters = new ArrayList<>();
+
+    public static CompassTracker getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
@@ -32,9 +36,4 @@ public final class CompassTracker extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
     }
-
-    public static CompassTracker getInstance() {
-        return instance;
-    }
-
 }

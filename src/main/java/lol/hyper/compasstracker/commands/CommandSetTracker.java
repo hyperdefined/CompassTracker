@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 public class CommandSetTracker implements CommandExecutor {
 
-    private static BukkitScheduler scheduler = Bukkit.getScheduler();
+    private static final BukkitScheduler scheduler = Bukkit.getScheduler();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
