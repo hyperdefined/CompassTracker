@@ -2,6 +2,7 @@ name: CompassTracker
 version: 1.0
 main: lol.hyper.compasstracker.CompassTracker
 api-version: 1.15
+author: hyperdefined
 permission:
   compasstracker.start:
     default: op
