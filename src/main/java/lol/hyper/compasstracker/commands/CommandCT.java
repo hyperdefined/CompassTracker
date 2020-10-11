@@ -97,7 +97,7 @@ public class CommandCT implements CommandExecutor {
             }
         } else if (args[0].equalsIgnoreCase("listhunters")) {
             if (!CompassTracker.getInstance().hunters.isEmpty()) {
-                sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
+                sender.sendMessage(ChatColor.GOLD + "-----------------Hunters-----------------");
                 for (Player player : CompassTracker.getInstance().hunters) {
                     sender.sendMessage(ChatColor.YELLOW + player.getName());
                 }
