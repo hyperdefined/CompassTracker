@@ -5,13 +5,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class CommandCT implements CommandExecutor {
+import java.util.Arrays;
+import java.util.List;
+
+public class CommandCT implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -148,5 +151,10 @@ public class CommandCT implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Invalid syntax! Do /ct help for the commands.");
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        return Arrays.asList("help", "setplayer", "removeplayer", "addhunter", "removehunter", "listhunters", "givecompass", "start", "stop");
     }
 }
