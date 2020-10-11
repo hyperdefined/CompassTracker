@@ -66,7 +66,6 @@ public final class CompassTracker extends JavaPlugin {
     }
 
     public static void endGame() {
-        Bukkit.broadcastMessage(ChatColor.RED + getInstance().speedrunner.getName() + " has left the server! Stopping game!");
         getInstance().gameStarted = false;
         getInstance().speedrunner = null;
         for (Player hunters : getInstance().hunters) {
