@@ -2,6 +2,7 @@ package lol.hyper.compasstracker;
 
 import lol.hyper.compasstracker.commands.CommandSetTracker;
 import lol.hyper.compasstracker.events.CompassEvent;
+import lol.hyper.compasstracker.events.EntityDeathEvent;
 import lol.hyper.compasstracker.events.PlayerLeaveEvent;
 import lol.hyper.compasstracker.events.PlayerRespawn;
 import org.bukkit.Bukkit;
@@ -34,6 +35,7 @@ public final class CompassTracker extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new CompassEvent(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerRespawn(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerLeaveEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new EntityDeathEvent(), this);
         this.getCommand("ct").setExecutor(new CommandSetTracker());
     }
 
