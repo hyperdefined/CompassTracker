@@ -10,11 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitScheduler;
 
 public class CommandSetTracker implements CommandExecutor {
-
-    private static final BukkitScheduler scheduler = Bukkit.getScheduler();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -125,24 +122,7 @@ public class CommandSetTracker implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "Game has started already!");
                 } else {
                     if (CompassTracker.getInstance().speedrunner != null && CompassTracker.getInstance().hunters.size() >= 1) {
-                        CompassTracker.getInstance().gameStarted = true;
-                        for (Player player : CompassTracker.getInstance().hunters) {
-                            ItemStack compass = new ItemStack(Material.COMPASS);
-                            ItemMeta meta = compass.getItemMeta();
-                            meta.setDisplayName("[Compass Tracker]");
-                            compass.setItemMeta(meta);
-                            player.getInventory().addItem(compass);
-                        }
-                        scheduler.scheduleSyncRepeatingTask(CompassTracker.getInstance(), () -> {
-                            if (CompassTracker.getInstance().gameStarted) {
-                                if (CompassTracker.getInstance().speedrunner.getWorld().getName().equals("world")) {
-                                    CompassTracker.getInstance().location = CompassTracker.getInstance().speedrunner.getLocation();
-                                }
-                            }
-                        }, 0L, 60);
-                        for (Player player : Bukkit.getOnlinePlayers()) {
-                            player.sendMessage(ChatColor.RED + CompassTracker.getInstance().speedrunner.getName() + " is now being tracked!");
-                        }
+                        CompassTracker.startGame();
                     } else {
                         sender.sendMessage(ChatColor.RED + "Cannot start game. You have not set the player and/or hunter(s).");
                     }

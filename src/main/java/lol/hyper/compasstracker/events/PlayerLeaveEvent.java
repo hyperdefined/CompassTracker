@@ -1,9 +1,6 @@
 package lol.hyper.compasstracker.events;
 
 import lol.hyper.compasstracker.CompassTracker;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,12 +11,7 @@ public class PlayerLeaveEvent implements Listener {
     public void onPlayerJoinLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (CompassTracker.getInstance().speedrunner == player) {
-            CompassTracker.getInstance().gameStarted = false;
-            CompassTracker.getInstance().speedrunner = null;
-            for (Player hunters : CompassTracker.getInstance().hunters) {
-                hunters.getInventory().remove(Material.COMPASS);
-            }
-            Bukkit.broadcastMessage(ChatColor.RED + player.getName() + " has left the server! Stopping game!");
+            CompassTracker.endGame();
         }
     }
 }

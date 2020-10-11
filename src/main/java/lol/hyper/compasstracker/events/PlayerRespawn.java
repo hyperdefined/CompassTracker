@@ -15,11 +15,7 @@ public class PlayerRespawn implements Listener {
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         if (CompassTracker.getInstance().gameStarted && CompassTracker.getInstance().hunters.contains(player)) {
-            ItemStack compass = new ItemStack(Material.COMPASS);
-            ItemMeta meta = compass.getItemMeta();
-            meta.setDisplayName("[Compass Tracker]");
-            compass.setItemMeta(meta);
-            player.getInventory().addItem(compass);
+            CompassTracker.giveCompass(player);
         }
     }
 }
