@@ -1,10 +1,5 @@
 package lol.hyper.compasstracker;
 
-import lol.hyper.compasstracker.commands.CommandCT;
-import lol.hyper.compasstracker.events.CompassEvent;
-import lol.hyper.compasstracker.events.EntityDeathEvent;
-import lol.hyper.compasstracker.events.PlayerLeaveEvent;
-import lol.hyper.compasstracker.events.PlayerRespawn;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -32,10 +27,7 @@ public final class CompassTracker extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        Bukkit.getPluginManager().registerEvents(new CompassEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerRespawn(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerLeaveEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new EntityDeathEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new Events(), this);
         this.getCommand("ct").setExecutor(new CommandCT());
     }
 

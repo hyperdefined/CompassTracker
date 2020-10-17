@@ -1,4 +1,4 @@
-package lol.hyper.compasstracker.commands;
+package lol.hyper.compasstracker;
 
 import lol.hyper.compasstracker.CompassTracker;
 import org.bukkit.Bukkit;
