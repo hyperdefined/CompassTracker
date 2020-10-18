@@ -29,6 +29,13 @@ public final class CompassTracker extends JavaPlugin {
         instance = this;
         Bukkit.getPluginManager().registerEvents(new Events(), this);
         this.getCommand("ct").setExecutor(new CommandCT());
+        new UpdateChecker(this, 79938).getVersion(version -> {
+            if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                this.getLogger().info("You are running the latest version.");
+            } else {
+                this.getLogger().info("There is a new version available! Please download at https://www.spigotmc.org/resources/ezhomes.82663/");
+            }
+        });
     }
 
     @Override
