@@ -33,7 +33,7 @@ public final class CompassTracker extends JavaPlugin {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
                 this.getLogger().info("You are running the latest version.");
             } else {
-                this.getLogger().info("There is a new version available! Please download at https://www.spigotmc.org/resources/ezhomes.82663/");
+                this.getLogger().info("There is a new version available! Please download at https://www.spigotmc.org/resources/compasstracker.79938/");
             }
         });
     }
