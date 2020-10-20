@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,6 +24,10 @@ public class CommandCT implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof ConsoleCommandSender) {
+            sender.sendMessage(ChatColor.RED + "You can only do these commands as a player!");
+            return true;
+        }
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             sender.sendMessage(ChatColor.GOLD + "-----------------Compass Tracker-----------------");
             sender.sendMessage(ChatColor.YELLOW + "/ct help - Shows this menu.");
