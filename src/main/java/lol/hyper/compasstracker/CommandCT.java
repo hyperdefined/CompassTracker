@@ -143,11 +143,8 @@ public class CommandCT implements TabExecutor {
                 if (!compassTracker.gameStarted) {
                     sender.sendMessage(ChatColor.RED + "Game has not started yet!");
                 } else {
-                    compassTracker.gameStarted = false;
-                    compassTracker.speedrunner = null;
-                    for (Player player : compassTracker.hunters) {
-                        player.getInventory().remove(Material.COMPASS);
-                    }
+                    compassTracker.endGame();
+                    Bukkit.broadcastMessage(ChatColor.RED + "Game was stopped!");
                 }
             } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to stop the game.");
