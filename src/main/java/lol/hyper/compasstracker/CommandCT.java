@@ -1,6 +1,5 @@
 package lol.hyper.compasstracker;
 
-import lol.hyper.compasstracker.CompassTracker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,6 +14,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommandCT implements TabExecutor {
+
+    private final CompassTracker compassTracker;
+
+    public CommandCT(CompassTracker compassTracker) {
+        this.compassTracker = compassTracker;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -32,12 +37,12 @@ public class CommandCT implements TabExecutor {
             sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
         } else if (args[0].equalsIgnoreCase("setplayer")) {
             if (sender.hasPermission("compasstracker.setplayer")) {
-                if (CompassTracker.getInstance().gameStarted) {
+                if (compassTracker.gameStarted) {
                     sender.sendMessage(ChatColor.RED + "Cannot set player. There is a game right now.");
                 } else {
                     if (Bukkit.getPlayerExact(args[1]) != null) {
-                        if (!CompassTracker.getInstance().hunters.contains(Bukkit.getPlayerExact(args[1]))) {
-                            CompassTracker.getInstance().speedrunner = Bukkit.getPlayerExact(args[1]);
+                        if (!compassTracker.hunters.contains(Bukkit.getPlayerExact(args[1]))) {
+                            compassTracker.speedrunner = Bukkit.getPlayerExact(args[1]);
                             sender.sendMessage(ChatColor.GREEN + args[1] + " has been set as the target player.");
                         } else {
                             sender.sendMessage(ChatColor.RED + "That player is a hunter! Cannot set as player.");
@@ -51,14 +56,14 @@ public class CommandCT implements TabExecutor {
             }
         } else if (args[0].equalsIgnoreCase("removeplayer")) {
             if (sender.hasPermission("compasstracker.removeplayer")) {
-                if (CompassTracker.getInstance().gameStarted) {
+                if (compassTracker.gameStarted) {
                     sender.sendMessage(ChatColor.RED + "Cannot remove player. There is a game right now!");
                 } else {
-                    if (CompassTracker.getInstance().speedrunner == null) {
+                    if (compassTracker.speedrunner == null) {
                         sender.sendMessage(ChatColor.RED + "Cannot remove player. There is not one set.");
                     } else {
-                        sender.sendMessage(ChatColor.GREEN + CompassTracker.getInstance().speedrunner.getName() + " has been removed.");
-                        CompassTracker.getInstance().speedrunner = null;
+                        sender.sendMessage(ChatColor.GREEN + compassTracker.speedrunner.getName() + " has been removed.");
+                        compassTracker.speedrunner = null;
                     }
                 }
             } else {
@@ -67,9 +72,9 @@ public class CommandCT implements TabExecutor {
         } else if (args[0].equalsIgnoreCase("addhunter")) {
             if (sender.hasPermission("compasstracker.addhunter")) {
                 if (Bukkit.getPlayerExact(args[1]) != null) {
-                    if (CompassTracker.getInstance().speedrunner != Bukkit.getPlayerExact(args[1])) {
-                        if (!CompassTracker.getInstance().hunters.contains(Bukkit.getPlayerExact(args[1]))) {
-                            CompassTracker.getInstance().hunters.add(Bukkit.getPlayerExact(args[1]));
+                    if (compassTracker.speedrunner != Bukkit.getPlayerExact(args[1])) {
+                        if (!compassTracker.hunters.contains(Bukkit.getPlayerExact(args[1]))) {
+                            compassTracker.hunters.add(Bukkit.getPlayerExact(args[1]));
                             sender.sendMessage(ChatColor.GREEN + args[1] + " has been added as a hunter!");
                         } else {
                             sender.sendMessage(ChatColor.RED + args[1] + " is already set as a hunter.");
@@ -86,8 +91,8 @@ public class CommandCT implements TabExecutor {
         } else if (args[0].equalsIgnoreCase("removehunter")) {
             if (sender.hasPermission("compasstracker.removehunter")) {
                 if (Bukkit.getPlayerExact(args[1]) != null) {
-                    if (CompassTracker.getInstance().hunters.contains(Bukkit.getPlayerExact(args[1]))) {
-                        CompassTracker.getInstance().hunters.remove(Bukkit.getPlayerExact(args[1]));
+                    if (compassTracker.hunters.contains(Bukkit.getPlayerExact(args[1]))) {
+                        compassTracker.hunters.remove(Bukkit.getPlayerExact(args[1]));
                         sender.sendMessage(ChatColor.GREEN + args[1] + " has been removed as a hunter!");
                     } else {
                         sender.sendMessage(ChatColor.RED + args[1] + " is not a hunter.");
@@ -99,9 +104,9 @@ public class CommandCT implements TabExecutor {
                 sender.sendMessage(ChatColor.RED + "You do not have permission remove a hunter.");
             }
         } else if (args[0].equalsIgnoreCase("listhunters")) {
-            if (!CompassTracker.getInstance().hunters.isEmpty()) {
+            if (!compassTracker.hunters.isEmpty()) {
                 sender.sendMessage(ChatColor.GOLD + "-----------------Hunters-----------------");
-                for (Player player : CompassTracker.getInstance().hunters) {
+                for (Player player : compassTracker.hunters) {
                     sender.sendMessage(ChatColor.YELLOW + player.getName());
                 }
                 sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
@@ -110,7 +115,7 @@ public class CommandCT implements TabExecutor {
             }
         } else if (args[0].equalsIgnoreCase("givecompass")) {
             Player player = (Player) sender;
-            if (CompassTracker.getInstance().hunters.contains(player)) {
+            if (compassTracker.hunters.contains(player)) {
                 ItemStack compass = new ItemStack(Material.COMPASS);
                 ItemMeta meta = compass.getItemMeta();
                 meta.setDisplayName("[Compass Tracker]");
@@ -121,11 +126,11 @@ public class CommandCT implements TabExecutor {
             }
         } else if (args[0].equalsIgnoreCase("start")) {
             if (sender.hasPermission("compasstracker.start")) {
-                if (CompassTracker.getInstance().gameStarted) {
+                if (compassTracker.gameStarted) {
                     sender.sendMessage(ChatColor.RED + "Game has started already!");
                 } else {
-                    if (CompassTracker.getInstance().speedrunner != null && CompassTracker.getInstance().hunters.size() >= 1) {
-                        CompassTracker.startGame();
+                    if (compassTracker.speedrunner != null && compassTracker.hunters.size() >= 1) {
+                        compassTracker.startGame();
                     } else {
                         sender.sendMessage(ChatColor.RED + "Cannot start game. You have not set the player and/or hunter(s).");
                     }
@@ -135,12 +140,12 @@ public class CommandCT implements TabExecutor {
             }
         } else if (args[0].equalsIgnoreCase("stop")) {
             if (sender.hasPermission("compasstracker.stop")) {
-                if (!CompassTracker.getInstance().gameStarted) {
+                if (!compassTracker.gameStarted) {
                     sender.sendMessage(ChatColor.RED + "Game has not started yet!");
                 } else {
-                    CompassTracker.getInstance().gameStarted = false;
-                    CompassTracker.getInstance().speedrunner = null;
-                    for (Player player : CompassTracker.getInstance().hunters) {
+                    compassTracker.gameStarted = false;
+                    compassTracker.speedrunner = null;
+                    for (Player player : compassTracker.hunters) {
                         player.getInventory().remove(Material.COMPASS);
                     }
                 }

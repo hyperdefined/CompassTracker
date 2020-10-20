@@ -15,13 +15,20 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class Events implements Listener {
+
+    private final CompassTracker compassTracker;
+
+    public Events(CompassTracker compassTracker) {
+        this.compassTracker = compassTracker;
+    }
+
     @EventHandler
     public void onPlayerJoinLeave(org.bukkit.event.entity.EntityDeathEvent event) {
         if (event.getEntity().getType() == EntityType.ENDER_DRAGON) {
             Player player = event.getEntity().getKiller();
-            if (player == CompassTracker.getInstance().speedrunner) {
+            if (player == compassTracker.speedrunner) {
                 Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + " has won the game! They killed the Ender Dragon!");
-                CompassTracker.endGame();
+                compassTracker.endGame();
             }
         }
     }
@@ -34,13 +41,13 @@ public class Events implements Listener {
 
         if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
             if (item != null && item.getType() == Material.COMPASS) {
-                if (item.getItemMeta().getDisplayName().contains("[Compass Tracker]") && CompassTracker.getInstance().gameStarted) {
-                    if (CompassTracker.getInstance().speedrunner != null) {
-                        if (!CompassTracker.getInstance().location.getWorld().getName().equals("world")) {
+                if (item.getItemMeta().getDisplayName().contains("[Compass Tracker]") && compassTracker.gameStarted) {
+                    if (compassTracker.speedrunner != null) {
+                        if (!compassTracker.location.getWorld().getName().equals("world")) {
                             player.sendMessage(ChatColor.RED + "Tracker only works in the overworld!");
                         } else {
-                            player.setCompassTarget(CompassTracker.getInstance().location);
-                            player.sendMessage(ChatColor.GREEN + "Updating location of " + CompassTracker.getInstance().speedrunner.getName() + ".");
+                            player.setCompassTarget(compassTracker.location);
+                            player.sendMessage(ChatColor.GREEN + "Updating location of " + compassTracker.speedrunner.getName() + ".");
                         }
                     } else {
                         player.sendMessage(ChatColor.RED + "You haven't set a player! Do /settracker <player>.");
@@ -53,16 +60,16 @@ public class Events implements Listener {
     @EventHandler
     public void onPlayerJoinLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (CompassTracker.getInstance().speedrunner == player) {
-            CompassTracker.endGame();
-            Bukkit.broadcastMessage(ChatColor.RED + CompassTracker.getInstance().speedrunner.getName() + " has left the server! Stopping game!");
+        if (compassTracker.speedrunner == player) {
+            compassTracker.endGame();
+            Bukkit.broadcastMessage(ChatColor.RED + compassTracker.speedrunner.getName() + " has left the server! Stopping game!");
         }
     }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        if (CompassTracker.getInstance().gameStarted && CompassTracker.getInstance().hunters.contains(player)) {
+        if (compassTracker.gameStarted && compassTracker.hunters.contains(player)) {
             CompassTracker.giveCompass(player);
         }
     }
@@ -70,9 +77,9 @@ public class Events implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        if (player == CompassTracker.getInstance().speedrunner) {
-            CompassTracker.endGame();
-            Bukkit.broadcastMessage(ChatColor.RED + CompassTracker.getInstance().speedrunner.getName() + " has died! Stopping game!");
+        if (player == compassTracker.speedrunner) {
+            compassTracker.endGame();
+            Bukkit.broadcastMessage(ChatColor.RED + compassTracker.speedrunner.getName() + " has died! Stopping game!");
         }
     }
 }

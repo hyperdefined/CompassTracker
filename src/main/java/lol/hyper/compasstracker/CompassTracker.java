@@ -13,22 +13,20 @@ import java.util.ArrayList;
 
 public final class CompassTracker extends JavaPlugin {
 
-    private static CompassTracker instance;
     public Player speedrunner;
     public Location location;
     public boolean gameStarted = false;
     public ArrayList<Player> hunters = new ArrayList<>();
     public int trackerTask = 0;
-
-    public static CompassTracker getInstance() {
-        return instance;
-    }
+    public CommandCT commandCT;
+    public Events events;
 
     @Override
     public void onEnable() {
-        instance = this;
-        Bukkit.getPluginManager().registerEvents(new Events(), this);
-        this.getCommand("ct").setExecutor(new CommandCT());
+        events = new Events(this);
+        commandCT = new CommandCT(this);
+        Bukkit.getPluginManager().registerEvents(new Events(this), this);
+        this.getCommand("ct").setExecutor(new CommandCT(this));
         new UpdateChecker(this, 79938).getVersion(version -> {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
                 this.getLogger().info("You are running the latest version.");
@@ -43,34 +41,34 @@ public final class CompassTracker extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    public static void startGame() {
-        getInstance().gameStarted = true;
-        for (Player player : getInstance().hunters) {
+    public void startGame() {
+        gameStarted = true;
+        for (Player player : hunters) {
             ItemStack compass = new ItemStack(Material.COMPASS);
             ItemMeta meta = compass.getItemMeta();
             meta.setDisplayName("[Compass Tracker]");
             compass.setItemMeta(meta);
             player.getInventory().addItem(compass);
         }
-        getInstance().trackerTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(getInstance(), () -> {
-            if (getInstance().gameStarted) {
-                if (getInstance().speedrunner.getWorld().getName().equals("world")) {
-                    getInstance().location = getInstance().speedrunner.getLocation();
+        trackerTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            if (gameStarted) {
+                if (speedrunner.getWorld().getName().equals("world")) {
+                    location = speedrunner.getLocation();
                 }
             }
         }, 0L, 60);
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(ChatColor.RED + CompassTracker.getInstance().speedrunner.getName() + " is now being tracked!");
+            player.sendMessage(ChatColor.RED + speedrunner.getName() + " is now being tracked!");
         }
     }
 
-    public static void endGame() {
-        getInstance().gameStarted = false;
-        getInstance().speedrunner = null;
-        for (Player hunters : getInstance().hunters) {
+    public void endGame() {
+        gameStarted = false;
+        speedrunner = null;
+        for (Player hunters : hunters) {
             hunters.getInventory().remove(Material.COMPASS);
         }
-        Bukkit.getScheduler().cancelTask(getInstance().trackerTask);
+        Bukkit.getScheduler().cancelTask(trackerTask);
     }
 
     public static void giveCompass(Player player) {
