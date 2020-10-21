@@ -25,8 +25,8 @@ public final class CompassTracker extends JavaPlugin {
     public void onEnable() {
         events = new Events(this);
         commandCT = new CommandCT(this);
-        Bukkit.getPluginManager().registerEvents(new Events(this), this);
-        this.getCommand("ct").setExecutor(new CommandCT(this));
+        Bukkit.getPluginManager().registerEvents(events, this);
+        this.getCommand("ct").setExecutor(commandCT);
         new UpdateChecker(this, 79938).getVersion(version -> {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
                 this.getLogger().info("You are running the latest version.");
