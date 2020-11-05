@@ -3,4 +3,4 @@
 
 A hunter vs. speedrunner plugin. Inspired by Dream’s Manhunt series. Works on versions 1.15 and above.
 
-[Documentation and more info](https://hyper.lol/minecraft-plugins/ezhomes/).
+[Documentation and more info](https://hyper.lol/minecraft-plugins/compasstracker/).
