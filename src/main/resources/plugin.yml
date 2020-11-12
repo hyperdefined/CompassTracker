@@ -1,5 +1,5 @@
 name: CompassTracker
-version: 1.0
+version: ${project.version}
 main: lol.hyper.compasstracker.CompassTracker
 api-version: 1.15
 author: hyperdefined
