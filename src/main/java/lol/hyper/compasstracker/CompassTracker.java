@@ -17,6 +17,7 @@
 
 package lol.hyper.compasstracker;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -51,6 +52,7 @@ public final class CompassTracker extends JavaPlugin {
                 this.getLogger().info("There is a new version available! Please download at https://www.spigotmc.org/resources/compasstracker.79938/");
             }
         });
+        Metrics metrics = new Metrics(this, 9389);
     }
 
     @Override
