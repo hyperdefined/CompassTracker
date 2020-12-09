@@ -41,13 +41,9 @@ public class CommandCT implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof ConsoleCommandSender) {
-            sender.sendMessage(ChatColor.RED + "You can only do these commands as a player!");
-            return true;
-        }
-
-        if (args.length == 0) {
+        if (args.length == 0 || sender instanceof ConsoleCommandSender) {
             sender.sendMessage(ChatColor.GREEN + "CompassTracker version " + compassTracker.getDescription().getVersion() + ". Created by hyperdefined.");
+            sender.sendMessage(ChatColor.GREEN + "Use /ct help for command help.");
             return true;
         }
 
@@ -186,9 +182,6 @@ public class CommandCT implements TabExecutor {
                 } else {
                     sender.sendMessage(ChatColor.RED + "You do not have permission to stop the game.");
                 }
-                break;
-            default:
-                sender.sendMessage(ChatColor.RED + "Invalid sub-command! Do /ct help for command help.");
                 break;
         }
         return true;
