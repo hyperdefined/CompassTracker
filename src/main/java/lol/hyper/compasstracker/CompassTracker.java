@@ -65,7 +65,8 @@ public final class CompassTracker extends JavaPlugin {
         for (Player player : hunters) {
             ItemStack compass = new ItemStack(Material.COMPASS);
             ItemMeta meta = compass.getItemMeta();
-            meta.setDisplayName("[Compass Tracker]");
+            meta.setDisplayName("Compass Tracker");
+            meta.getLore().add(ChatColor.DARK_PURPLE + "Right click to update " + speedrunner.getName() + "'s last location.")
             compass.setItemMeta(meta);
             player.getInventory().addItem(compass);
         }
