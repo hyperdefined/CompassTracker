@@ -41,7 +41,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoinLeave(EntityDeathEvent event) {
+    public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity().getType() == EntityType.ENDER_DRAGON) {
             Player player = event.getEntity().getKiller();
             if (player == gameManager.getGameSpeedrunner()) {
@@ -59,7 +59,7 @@ public class Events implements Listener {
 
         if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
             if (item != null && item.getType() == Material.COMPASS) {
-                if (item == gameManager.trackingCompass() && gameManager.gameStatus()) {
+                if (item.getItemMeta().getDisplayName().contains("Tracking Compass") && gameManager.gameStatus()) {
                     if (gameManager.getGameSpeedrunner() != null) {
                         if (!gameManager.getSpeedrunnerLocation().getWorld().getName().equals("world")) {
                             player.sendMessage(ChatColor.RED + "Tracker only works in the overworld!");
@@ -76,11 +76,11 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoinLeave(PlayerQuitEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (gameManager.getGameSpeedrunner() == player) {
-            gameManager.endGame();
             Bukkit.broadcastMessage(ChatColor.RED + gameManager.getGameSpeedrunner().getName() + " has left the server! Stopping game!");
+            gameManager.endGame();
         }
     }
 
@@ -96,8 +96,8 @@ public class Events implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         if (player == gameManager.getGameSpeedrunner()) {
-            gameManager.endGame();
             Bukkit.broadcastMessage(ChatColor.RED + gameManager.getGameSpeedrunner().getName() + " has died! Stopping game!");
+            gameManager.endGame();
         }
     }
 }
