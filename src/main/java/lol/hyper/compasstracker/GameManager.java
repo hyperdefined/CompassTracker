@@ -22,7 +22,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -34,7 +33,7 @@ public class GameManager {
     private final CompassTracker compassTracker;
 
     private final ArrayList<Player> gameHunters = new ArrayList<>();
-    private Player gameSpeedrunner =  null;
+    private Player gameSpeedrunner = null;
     private Boolean isGameRunning = false;
     private int trackerTask = 0;
     private Location speedrunnerLocation;
@@ -115,7 +114,9 @@ public class GameManager {
         ItemStack compass = new ItemStack(Material.COMPASS);
         ItemMeta meta = compass.getItemMeta();
         meta.setDisplayName("Tracking Compass");
-        meta.getLore().add(ChatColor.DARK_PURPLE + "Right click to update " + gameSpeedrunner.getName() + "'s last location.");
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(ChatColor.DARK_PURPLE + "Right click to update " + gameSpeedrunner.getName() + "'s last location.");
+        meta.setLore(lore);
         compass.setItemMeta(meta);
         return compass;
     }
