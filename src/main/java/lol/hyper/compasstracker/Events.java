@@ -20,6 +20,7 @@ package lol.hyper.compasstracker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,9 +35,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class Events implements Listener {
 
+    private final CompassTracker compassTracker;
     private final GameManager gameManager;
 
-    public Events(GameManager gameManager) {
+    public Events(CompassTracker compassTracker, GameManager gameManager) {
+        this.compassTracker = compassTracker;
         this.gameManager = gameManager;
     }
 
@@ -53,6 +56,9 @@ public class Events implements Listener {
 
     @EventHandler
     public void onPlayerClicks(PlayerInteractEvent event) {
+        if (!compassTracker.config.getBoolean("manual-tracking")) {
+            return;
+        }
         Player player = event.getPlayer();
         Action action = event.getAction();
         ItemStack item = event.getItem();
