@@ -33,6 +33,8 @@ public class CommandCT implements TabExecutor {
     private final CompassTracker compassTracker;
     private final GameManager gameManager;
 
+    private final List<String> commandArgs = Arrays.asList("help", "setplayer", "removeplayer", "addhunter", "removehunter", "listhunters", "givecompass", "start", "stop");
+
     public CommandCT(CompassTracker compassTracker, GameManager gameManager) {
         this.compassTracker = compassTracker;
         this.gameManager = gameManager;
@@ -184,6 +186,10 @@ public class CommandCT implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return Arrays.asList("help", "setplayer", "removeplayer", "addhunter", "removehunter", "listhunters", "givecompass", "start", "stop");
+        if (!commandArgs.contains(args[0])) {
+            return commandArgs;
+        } else {
+            return null;
+        }
     }
 }
