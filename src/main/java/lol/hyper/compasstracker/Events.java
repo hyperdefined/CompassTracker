@@ -29,6 +29,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -87,6 +88,16 @@ public class Events implements Listener {
         if (gameManager.getGameSpeedrunner() == player) {
             Bukkit.broadcastMessage(ChatColor.RED + gameManager.getGameSpeedrunner().getName() + " has left the server! Stopping game!");
             gameManager.endGame();
+        }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (!gameManager.gameStatus()) {
+            if (player.getInventory().contains(Material.COMPASS)) {
+                player.getInventory().remove(Material.COMPASS);
+            }
         }
     }
 
