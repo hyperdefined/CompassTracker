@@ -17,6 +17,7 @@
 
 package lol.hyper.compasstracker;
 
+import com.sun.org.glassfish.gmbal.GmbalException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -34,9 +35,11 @@ import java.util.List;
 public class CommandCT implements TabExecutor {
 
     private final CompassTracker compassTracker;
+    private final GameManager gameManager;
 
-    public CommandCT(CompassTracker compassTracker) {
+    public CommandCT(CompassTracker compassTracker, GameManager gameManager) {
         this.compassTracker = compassTracker;
+        this.gameManager = gameManager;
     }
 
     @Override
@@ -63,12 +66,12 @@ public class CommandCT implements TabExecutor {
                 break;
             case "setplayer":
                 if (sender.hasPermission("compasstracker.setplayer")) {
-                    if (compassTracker.gameStarted) {
+                    if (gameManager.gameStatus()) {
                         sender.sendMessage(ChatColor.RED + "Cannot set player. There is a game right now.");
                     } else {
                         if (Bukkit.getPlayerExact(args[1]) != null) {
-                            if (!compassTracker.hunters.contains(Bukkit.getPlayerExact(args[1]))) {
-                                compassTracker.speedrunner = Bukkit.getPlayerExact(args[1]);
+                            if (!gameManager.getGameHunters().contains(Bukkit.getPlayerExact(args[1]))) {
+                                gameManager.setGameSpeedrunner(Bukkit.getPlayerExact(args[1]));
                                 sender.sendMessage(ChatColor.GREEN + args[1] + " has been set as the target player.");
                             } else {
                                 sender.sendMessage(ChatColor.RED + "That player is a hunter! Cannot set as player.");
@@ -83,14 +86,14 @@ public class CommandCT implements TabExecutor {
                 break;
             case "removeplayer":
                 if (sender.hasPermission("compasstracker.removeplayer")) {
-                    if (compassTracker.gameStarted) {
+                    if (gameManager.gameStatus()) {
                         sender.sendMessage(ChatColor.RED + "Cannot remove player. There is a game right now!");
                     } else {
-                        if (compassTracker.speedrunner == null) {
+                        if (gameManager.getGameSpeedrunner() == null) {
                             sender.sendMessage(ChatColor.RED + "Cannot remove player. There is not one set.");
                         } else {
-                            sender.sendMessage(ChatColor.GREEN + compassTracker.speedrunner.getName() + " has been removed.");
-                            compassTracker.speedrunner = null;
+                            sender.sendMessage(ChatColor.GREEN + gameManager.getGameSpeedrunner().getName() + " has been removed.");
+                            gameManager.removeGameSpeedrunner();
                         }
                     }
                 } else {
@@ -100,9 +103,9 @@ public class CommandCT implements TabExecutor {
             case "addhunter":
                 if (sender.hasPermission("compasstracker.addhunter")) {
                     if (Bukkit.getPlayerExact(args[1]) != null) {
-                        if (compassTracker.speedrunner != Bukkit.getPlayerExact(args[1])) {
-                            if (!compassTracker.hunters.contains(Bukkit.getPlayerExact(args[1]))) {
-                                compassTracker.hunters.add(Bukkit.getPlayerExact(args[1]));
+                        if (gameManager.getGameSpeedrunner() != Bukkit.getPlayerExact(args[1])) {
+                            if (!gameManager.isHunterListed(Bukkit.getPlayerExact(args[1]))) {
+                                gameManager.addHunter(Bukkit.getPlayerExact(args[1]));
                                 sender.sendMessage(ChatColor.GREEN + args[1] + " has been added as a hunter!");
                             } else {
                                 sender.sendMessage(ChatColor.RED + args[1] + " is already set as a hunter.");
@@ -120,8 +123,8 @@ public class CommandCT implements TabExecutor {
             case "removehunter":
                 if (sender.hasPermission("compasstracker.removehunter")) {
                     if (Bukkit.getPlayerExact(args[1]) != null) {
-                        if (compassTracker.hunters.contains(Bukkit.getPlayerExact(args[1]))) {
-                            compassTracker.hunters.remove(Bukkit.getPlayerExact(args[1]));
+                        if (gameManager.isHunterListed(Bukkit.getPlayerExact(args[1]))) {
+                            gameManager.removeHunter(Bukkit.getPlayerExact(args[1]));
                             sender.sendMessage(ChatColor.GREEN + args[1] + " has been removed as a hunter!");
                         } else {
                             sender.sendMessage(ChatColor.RED + args[1] + " is not a hunter.");
@@ -134,9 +137,9 @@ public class CommandCT implements TabExecutor {
                 }
                 break;
             case "listhunters":
-                if (!compassTracker.hunters.isEmpty()) {
+                if (!gameManager.getGameHunters().isEmpty()) {
                     sender.sendMessage(ChatColor.GOLD + "-----------------Hunters-----------------");
-                    for (Player player : compassTracker.hunters) {
+                    for (Player player : gameManager.getGameHunters()) {
                         sender.sendMessage(ChatColor.YELLOW + player.getName());
                     }
                     sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
@@ -146,23 +149,19 @@ public class CommandCT implements TabExecutor {
                 break;
             case "givecompass":
                 Player player = (Player) sender;
-                if (compassTracker.hunters.contains(player)) {
-                    ItemStack compass = new ItemStack(Material.COMPASS);
-                    ItemMeta meta = compass.getItemMeta();
-                    meta.setDisplayName("[Compass Tracker]");
-                    compass.setItemMeta(meta);
-                    player.getInventory().addItem(compass);
+                if (gameManager.getGameHunters().contains(player)) {
+                    player.getInventory().addItem(gameManager.trackingCompass());
                 } else {
                     sender.sendMessage(ChatColor.RED + "You are not a hunter!");
                 }
                 break;
             case "start":
                 if (sender.hasPermission("compasstracker.start")) {
-                    if (compassTracker.gameStarted) {
+                    if (gameManager.gameStatus()) {
                         sender.sendMessage(ChatColor.RED + "Game has started already!");
                     } else {
-                        if (compassTracker.speedrunner != null && compassTracker.hunters.size() >= 1) {
-                            compassTracker.startGame();
+                        if (gameManager.getGameSpeedrunner() != null && gameManager.getGameHunters().size() >= 1) {
+                            gameManager.startGame();
                         } else {
                             sender.sendMessage(ChatColor.RED + "Cannot start game. You have not set the player and/or hunter(s).");
                         }
@@ -173,10 +172,10 @@ public class CommandCT implements TabExecutor {
                 break;
             case "stop":
                 if (sender.hasPermission("compasstracker.stop")) {
-                    if (!compassTracker.gameStarted) {
+                    if (!gameManager.gameStatus()) {
                         sender.sendMessage(ChatColor.RED + "Game has not started yet!");
                     } else {
-                        compassTracker.endGame();
+                        gameManager.endGame();
                         Bukkit.broadcastMessage(ChatColor.RED + "Game was stopped!");
                     }
                 } else {
