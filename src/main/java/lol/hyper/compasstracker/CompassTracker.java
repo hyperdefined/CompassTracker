@@ -19,16 +19,29 @@ package lol.hyper.compasstracker;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.logging.Logger;
 
 public final class CompassTracker extends JavaPlugin {
 
     public CommandCT commandCT;
     public Events events;
     public GameManager gameManager;
+    public final File configFile = new File(this.getDataFolder(), "config.yml");
+    public final Logger logger = this.getLogger();
+    public FileConfiguration config;
 
     @Override
     public void onEnable() {
+        if (!configFile.exists()) {
+            this.saveResource("config.yml", true);
+            logger.info("Copying default config!");
+        }
+        loadConfig();
         gameManager = new GameManager(this);
         events = new Events(gameManager);
         commandCT = new CommandCT(this, gameManager);
@@ -47,5 +60,9 @@ public final class CompassTracker extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public void loadConfig() {
+        config = YamlConfiguration.loadConfiguration(configFile);
     }
 }

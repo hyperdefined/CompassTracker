@@ -131,6 +131,11 @@ public class GameManager {
         trackerTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(compassTracker, () -> {
             if (gameSpeedrunner.getWorld().getName().equals("world")) {
                 speedrunnerLocation = gameSpeedrunner.getLocation();
+                if (!compassTracker.config.getBoolean("manual-tracking")) {
+                    for (Player player : gameHunters) {
+                        player.setCompassTarget(speedrunnerLocation);
+                    }
+                }
             }
         }, 0L, 60);
         Bukkit.broadcastMessage(ChatColor.GREEN + "Game has started!");

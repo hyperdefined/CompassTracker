@@ -1,0 +1,4 @@
+# Use manual tracking. This requires players to right click the compass to update the speedrunner's location.
+# Setting this to false will auto update the compass every 5 seconds, no need to right click.
+# True is the default value.
+manual-tracking: true
