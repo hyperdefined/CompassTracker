@@ -17,7 +17,6 @@
 
 package lol.hyper.compasstracker;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -130,10 +129,8 @@ public class GameManager {
             player.getInventory().addItem(trackingCompass());
         }
         trackerTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(compassTracker, () -> {
-            if (isGameRunning) {
-                if (gameSpeedrunner.getWorld().getName().equals("world")) {
-                    speedrunnerLocation = gameSpeedrunner.getLocation();
-                }
+            if (gameSpeedrunner.getWorld().getName().equals("world")) {
+                speedrunnerLocation = gameSpeedrunner.getLocation();
             }
         }, 0L, 60);
         Bukkit.broadcastMessage(ChatColor.GREEN + "Game has started!");
