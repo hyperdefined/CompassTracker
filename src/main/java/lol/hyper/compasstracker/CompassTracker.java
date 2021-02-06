@@ -50,9 +50,9 @@ public final class CompassTracker extends JavaPlugin {
         this.getCommand("ct").setExecutor(commandCT);
         new UpdateChecker(this, 79938).getVersion(version -> {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                this.getLogger().info("You are running the latest version.");
+                logger.info("You are running the latest version.");
             } else {
-                this.getLogger().info("There is a new version available! Please download at https://www.spigotmc.org/resources/compasstracker.79938/");
+                logger.info("There is a new version available! Please download at https://www.spigotmc.org/resources/compasstracker.79938/");
             }
         });
         Metrics metrics = new Metrics(this, 9389);
