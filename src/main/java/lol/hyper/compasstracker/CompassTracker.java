@@ -34,6 +34,7 @@ public final class CompassTracker extends JavaPlugin {
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public final Logger logger = this.getLogger();
     public FileConfiguration config;
+    final int configVersion = 1;
 
     @Override
     public void onEnable() {
@@ -64,5 +65,8 @@ public final class CompassTracker extends JavaPlugin {
 
     public void loadConfig() {
         config = YamlConfiguration.loadConfiguration(configFile);
+        if (config.getInt("config-version") != configVersion) {
+            logger.warning("Your config file is oudated! Please regenerate the config.");
+        }
     }
 }

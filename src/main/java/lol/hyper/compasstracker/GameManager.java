@@ -17,12 +17,11 @@
 
 package lol.hyper.compasstracker;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -160,6 +159,9 @@ public class GameManager {
         }
         Bukkit.getScheduler().cancelTask(trackerTask);
         Bukkit.broadcastMessage(ChatColor.GREEN + "Duration: " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
+        if (compassTracker.config.getBoolean("spawn-firework-on-win")) {
+            spawnFirework(gameSpeedrunner);
+        }
     }
 
     /**
@@ -170,5 +172,19 @@ public class GameManager {
         return isGameRunning;
     }
 
+    /**
+     * Spawn a nice firework.
+     * @param player Player to spawn firework on.
+     */
+    private void spawnFirework(Player player) {
+        Firework firework = player.getWorld().spawn(player.getLocation(), Firework.class);
+        FireworkMeta fwmeta = firework.getFireworkMeta();
+        FireworkEffect.Builder builder = FireworkEffect.builder();
 
+        fwmeta.addEffect(builder.withColor(Color.BLUE).flicker(true).build());
+        fwmeta.addEffect(builder.trail(true).build());
+        fwmeta.addEffect(builder.withFade(Color.RED).build());
+        fwmeta.setPower(0);
+        firework.setFireworkMeta(fwmeta);
+    }
 }

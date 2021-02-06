@@ -2,3 +2,9 @@
 # Setting this to false will auto update the compass every 5 seconds, no need to right click.
 # True is the default value.
 manual-tracking: true
+
+# Spawn a firework to celebrate the player winning.
+spawn-firework-on-win: true
+
+# No touch please :)
+config-version: 1
