@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class GameManager {
 
@@ -36,6 +37,7 @@ public class GameManager {
     private Boolean isGameRunning = false;
     private int trackerTask = 0;
     private Location speedrunnerLocation;
+    private long startTime;
 
     public GameManager (CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
@@ -124,6 +126,7 @@ public class GameManager {
      * Starts the game.
      */
     public void startGame() {
+        startTime = System.nanoTime();
         isGameRunning = true;
         for (Player player : gameHunters) {
             player.getInventory().addItem(trackingCompass());
@@ -145,12 +148,18 @@ public class GameManager {
      * Ends the game.
      */
     public void endGame() {
+        long timeElapsed = TimeUnit.SECONDS.convert((System.nanoTime() - startTime), TimeUnit.NANOSECONDS);
+        long hours = timeElapsed / 3600;
+        long minutes = (timeElapsed % 3600) / 60;
+        long seconds = timeElapsed % 60;
+
         isGameRunning = false;
         gameSpeedrunner = null;
         for (Player hunters : gameHunters) {
             hunters.getInventory().remove(Material.COMPASS);
         }
         Bukkit.getScheduler().cancelTask(trackerTask);
+        Bukkit.broadcastMessage(ChatColor.GREEN + "Duration: " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
     }
 
     /**
