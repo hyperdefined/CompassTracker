@@ -147,6 +147,9 @@ public class GameManager {
      * Ends the game.
      */
     public void endGame() {
+        if (compassTracker.config.getBoolean("spawn-firework-on-win")) {
+            spawnFirework(gameSpeedrunner);
+        }
         long timeElapsed = TimeUnit.SECONDS.convert((System.nanoTime() - startTime), TimeUnit.NANOSECONDS);
         long hours = timeElapsed / 3600;
         long minutes = (timeElapsed % 3600) / 60;
@@ -159,9 +162,6 @@ public class GameManager {
         }
         Bukkit.getScheduler().cancelTask(trackerTask);
         Bukkit.broadcastMessage(ChatColor.GREEN + "Duration: " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
-        if (compassTracker.config.getBoolean("spawn-firework-on-win")) {
-            spawnFirework(gameSpeedrunner);
-        }
     }
 
     /**
