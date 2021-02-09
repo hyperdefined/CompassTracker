@@ -91,16 +91,6 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        if (!gameManager.gameStatus()) {
-            if (player.getInventory().contains(Material.COMPASS)) {
-                player.getInventory().remove(Material.COMPASS);
-            }
-        }
-    }
-
-    @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         if (gameManager.gameStatus() && gameManager.isHunterListed(player)) {
