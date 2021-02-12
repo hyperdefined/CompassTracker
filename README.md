@@ -3,4 +3,5 @@
 
 A hunter vs. speedrunner plugin. Inspired by Dream’s Manhunt series. Works on versions 1.15 and above.
 
-[Documentation and more info](https://hyper.lol/minecraft-plugins/compasstracker/).
+- [Documentation and more info](https://hyper.lol/minecraft-plugins/compasstracker/).
+- [SpigotMC Page](https://www.spigotmc.org/resources/compasstracker.79938/).
