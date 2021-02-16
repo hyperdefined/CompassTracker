@@ -28,7 +28,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -36,20 +35,18 @@ import org.bukkit.inventory.ItemStack;
 public class Events implements Listener {
 
     private final CompassTracker compassTracker;
-    private final GameManager gameManager;
 
-    public Events(CompassTracker compassTracker, GameManager gameManager) {
+    public Events(CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
-        this.gameManager = gameManager;
     }
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity().getType() == EntityType.ENDER_DRAGON) {
             Player player = event.getEntity().getKiller();
-            if (player == gameManager.getGameSpeedrunner()) {
+            if (player == compassTracker.gameManager.getGameSpeedrunner()) {
                 Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + " has won the game! They killed the Ender Dragon!");
-                gameManager.endGame();
+                compassTracker.gameManager.endGame();
             }
         }
     }
@@ -65,13 +62,13 @@ public class Events implements Listener {
 
         if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
             if (item != null && item.getType() == Material.COMPASS) {
-                if (item.getItemMeta().getDisplayName().contains("Tracking Compass") && gameManager.gameStatus()) {
-                    if (gameManager.getGameSpeedrunner() != null) {
-                        if (!gameManager.getSpeedrunnerLocation().getWorld().getName().equals("world")) {
+                if (item.getItemMeta().getDisplayName().contains("Tracking Compass") && compassTracker.gameManager.gameStatus()) {
+                    if (compassTracker.gameManager.getGameSpeedrunner() != null) {
+                        if (!compassTracker.gameManager.getSpeedrunnerLocation().getWorld().getName().equals("world")) {
                             player.sendMessage(ChatColor.RED + "Tracker only works in the overworld!");
                         } else {
-                            player.setCompassTarget(gameManager.getSpeedrunnerLocation());
-                            player.sendMessage(ChatColor.GREEN + "Updating location of " + gameManager.getGameSpeedrunner().getName() + ".");
+                            player.setCompassTarget(compassTracker.gameManager.getSpeedrunnerLocation());
+                            player.sendMessage(ChatColor.GREEN + "Updating location of " + compassTracker.gameManager.getGameSpeedrunner().getName() + ".");
                         }
                     } else {
                         player.sendMessage(ChatColor.RED + "You haven't set a player! Do /settracker <player>.");
@@ -84,26 +81,26 @@ public class Events implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (gameManager.getGameSpeedrunner() == player) {
-            Bukkit.broadcastMessage(ChatColor.RED + gameManager.getGameSpeedrunner().getName() + " has left the server! Stopping game!");
-            gameManager.endGame();
+        if (compassTracker.gameManager.getGameSpeedrunner() == player) {
+            Bukkit.broadcastMessage(ChatColor.RED + compassTracker.gameManager.getGameSpeedrunner().getName() + " has left the server! Stopping game!");
+            compassTracker.gameManager.endGame();
         }
     }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        if (gameManager.gameStatus() && gameManager.isHunterListed(player)) {
-            player.getInventory().addItem(gameManager.trackingCompass());
+        if (compassTracker.gameManager.gameStatus() && compassTracker.gameManager.isHunterListed(player)) {
+            player.getInventory().addItem(compassTracker.gameManager.trackingCompass());
         }
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        if (player == gameManager.getGameSpeedrunner()) {
-            Bukkit.broadcastMessage(ChatColor.RED + gameManager.getGameSpeedrunner().getName() + " has died! Stopping game!");
-            gameManager.endGame();
+        if (player == compassTracker.gameManager.getGameSpeedrunner()) {
+            Bukkit.broadcastMessage(ChatColor.RED + compassTracker.gameManager.getGameSpeedrunner().getName() + " has died! Stopping game!");
+            compassTracker.gameManager.endGame();
         }
     }
 }

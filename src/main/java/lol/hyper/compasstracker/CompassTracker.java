@@ -44,8 +44,8 @@ public final class CompassTracker extends JavaPlugin {
         }
         loadConfig();
         gameManager = new GameManager(this);
-        events = new Events(this, gameManager);
-        commandCT = new CommandCT(this, gameManager);
+        events = new Events(this);
+        commandCT = new CommandCT(this);
         Bukkit.getPluginManager().registerEvents(events, this);
         this.getCommand("ct").setExecutor(commandCT);
         new UpdateChecker(this, 79938).getVersion(version -> {
