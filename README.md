@@ -17,5 +17,8 @@ CompassTracker is a hunter vs. speedrunner plugin. Inspired by Dream's Manhunt s
 * Shows how long the game lasts once the game ends.
 * Very lightweight, super easy to use.
 
-- [Documentation and more info](https://github.com/hyperdefined/CompassTracker/wiki).
-- [SpigotMC Page](https://www.spigotmc.org/resources/compasstracker.79938/).
+## Documentation
+Visit the [wiki](https://github.com/hyperdefined/CompassTracker/wiki) for help.
+
+## License
+This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/CompassTracker/blob/master/LICENSE).
