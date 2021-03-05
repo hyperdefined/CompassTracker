@@ -3,5 +3,5 @@
 
 CompassTracker is a hunter vs. speedrunner plugin. Inspired by Dream's Manhunt series. Hunters can track a speedrunner with a compass. Works on versions 1.15 and above.
 
-- [Documentation and more info](https://hyper.lol/minecraft-plugins/compasstracker/).
+- [Wiki](https://github.com/hyperdefined/CompassTracker/wiki).
 - [SpigotMC Page](https://www.spigotmc.org/resources/compasstracker.79938/).
