@@ -32,7 +32,7 @@ public class CommandCT implements TabExecutor {
 
     private final CompassTracker compassTracker;
 
-    private final List<String> commandArgs = Arrays.asList("help", "setplayer", "removeplayer", "addhunter", "removehunter", "listhunters", "givecompass", "start", "stop");
+    private final List < String > commandArgs = Arrays.asList("help", "setplayer", "removeplayer", "addhunter", "removehunter", "listhunters", "givecompass", "start", "stop");
 
     public CommandCT(CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
@@ -135,7 +135,7 @@ public class CommandCT implements TabExecutor {
             case "listhunters":
                 if (!compassTracker.gameManager.getGameHunters().isEmpty()) {
                     sender.sendMessage(ChatColor.GOLD + "-----------------Hunters-----------------");
-                    for (Player player : compassTracker.gameManager.getGameHunters()) {
+                    for (Player player: compassTracker.gameManager.getGameHunters()) {
                         sender.sendMessage(ChatColor.YELLOW + player.getName());
                     }
                     sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
@@ -183,7 +183,7 @@ public class CommandCT implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List < String > onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!commandArgs.contains(args[0])) {
             return commandArgs;
         } else {
