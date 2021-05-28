@@ -31,7 +31,7 @@ public class GameManager {
 
     private final CompassTracker compassTracker;
 
-    private final ArrayList < Player > gameHunters = new ArrayList < > ();
+    private final ArrayList<Player> gameHunters = new ArrayList<>();
     private Player gameSpeedrunner = null;
     private Boolean isGameRunning = false;
     private int trackerTask = 0;
@@ -71,16 +71,8 @@ public class GameManager {
      * Get the current hunters.
      * @return The hunters.
      */
-    public ArrayList < Player > getGameHunters() {
+    public ArrayList<Player> getGameHunters() {
         return gameHunters;
-    }
-
-    /**
-     * Set the speedrunner for the game.
-     * @param playerToSet Player to set.
-     */
-    public void setGameSpeedrunner(Player playerToSet) {
-        gameSpeedrunner = playerToSet;
     }
 
     /**
@@ -89,6 +81,14 @@ public class GameManager {
      */
     public Player getGameSpeedrunner() {
         return gameSpeedrunner;
+    }
+
+    /**
+     * Set the speedrunner for the game.
+     * @param playerToSet Player to set.
+     */
+    public void setGameSpeedrunner(Player playerToSet) {
+        gameSpeedrunner = playerToSet;
     }
 
     /**
@@ -114,7 +114,7 @@ public class GameManager {
         ItemStack compass = new ItemStack(Material.COMPASS);
         ItemMeta meta = compass.getItemMeta();
         meta.setDisplayName("Tracking Compass");
-        ArrayList < String > lore = new ArrayList < > ();
+        ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.DARK_PURPLE + "Right click to update " + gameSpeedrunner.getName() + "'s last location.");
         meta.setLore(lore);
         compass.setItemMeta(meta);
@@ -127,19 +127,24 @@ public class GameManager {
     public void startGame() {
         startTime = System.nanoTime();
         isGameRunning = true;
-        for (Player player: gameHunters) {
+        for (Player player : gameHunters) {
             player.getInventory().addItem(trackingCompass());
         }
-        trackerTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(compassTracker, () -> {
-        if (gameSpeedrunner.getWorld().getName().equals("world")) {
-            speedrunnerLocation = gameSpeedrunner.getLocation();
-            if (!compassTracker.config.getBoolean("manual-tracking")) {
-                for (Player player: gameHunters) {
-                    player.setCompassTarget(speedrunnerLocation);
-                }
-            }
-        }
-        }, 0L, 60);
+        trackerTask = Bukkit.getScheduler()
+                .scheduleSyncRepeatingTask(
+                        compassTracker,
+                        () -> {
+                            if (gameSpeedrunner.getWorld().getName().equals("world")) {
+                                speedrunnerLocation = gameSpeedrunner.getLocation();
+                                if (!compassTracker.config.getBoolean("manual-tracking")) {
+                                    for (Player player : gameHunters) {
+                                        player.setCompassTarget(speedrunnerLocation);
+                                    }
+                                }
+                            }
+                        },
+                        0L,
+                        60);
         Bukkit.broadcastMessage(ChatColor.GREEN + "Game has started!");
     }
 
@@ -157,11 +162,12 @@ public class GameManager {
 
         isGameRunning = false;
         gameSpeedrunner = null;
-        for (Player hunters: gameHunters) {
+        for (Player hunters : gameHunters) {
             hunters.getInventory().remove(Material.COMPASS);
         }
         Bukkit.getScheduler().cancelTask(trackerTask);
-        Bukkit.broadcastMessage(ChatColor.GREEN + "Duration: " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
+        Bukkit.broadcastMessage(
+                ChatColor.GREEN + "Duration: " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
     }
 
     /**

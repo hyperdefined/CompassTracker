@@ -32,7 +32,16 @@ public class CommandCT implements TabExecutor {
 
     private final CompassTracker compassTracker;
 
-    private final List < String > commandArgs = Arrays.asList("help", "setplayer", "removeplayer", "addhunter", "removehunter", "listhunters", "givecompass", "start", "stop");
+    private final List<String> commandArgs = Arrays.asList(
+            "help",
+            "setplayer",
+            "removeplayer",
+            "addhunter",
+            "removehunter",
+            "listhunters",
+            "givecompass",
+            "start",
+            "stop");
 
     public CommandCT(CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
@@ -41,7 +50,8 @@ public class CommandCT implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0 || sender instanceof ConsoleCommandSender) {
-            sender.sendMessage(ChatColor.GREEN + "CompassTracker version " + compassTracker.getDescription().getVersion() + ". Created by hyperdefined.");
+            sender.sendMessage(ChatColor.GREEN + "CompassTracker version "
+                    + compassTracker.getDescription().getVersion() + ". Created by hyperdefined.");
             sender.sendMessage(ChatColor.GREEN + "Use /ct help for command help.");
             return true;
         }
@@ -52,10 +62,12 @@ public class CommandCT implements TabExecutor {
                 sender.sendMessage(ChatColor.YELLOW + "/ct help - Shows this menu.");
                 sender.sendMessage(ChatColor.YELLOW + "/ct setplayer <player> - Set player to be tracked.");
                 sender.sendMessage(ChatColor.YELLOW + "/ct removeplayer - Remove player from being tracked.");
-                sender.sendMessage(ChatColor.YELLOW + "/ct addhunter - Add player to hunter list. Hunters will get the tracking compass.");
+                sender.sendMessage(ChatColor.YELLOW
+                        + "/ct addhunter - Add player to hunter list. Hunters will get the tracking compass.");
                 sender.sendMessage(ChatColor.YELLOW + "/ct removehunter - Remove hunter from list.");
                 sender.sendMessage(ChatColor.YELLOW + "/ct listhunters - See who the hunter(s) are.");
-                sender.sendMessage(ChatColor.YELLOW + "/ct givecompass - Give yourself the tracking compass. Hunters only.");
+                sender.sendMessage(
+                        ChatColor.YELLOW + "/ct givecompass - Give yourself the tracking compass. Hunters only.");
                 sender.sendMessage(ChatColor.YELLOW + "/ct start - Start the game. Player and hunter(s) must be set.");
                 sender.sendMessage(ChatColor.YELLOW + "/ct stop - Stops the game.");
                 sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
@@ -88,7 +100,11 @@ public class CommandCT implements TabExecutor {
                         if (compassTracker.gameManager.getGameSpeedrunner() == null) {
                             sender.sendMessage(ChatColor.RED + "Cannot remove player. There is not one set.");
                         } else {
-                            sender.sendMessage(ChatColor.GREEN + compassTracker.gameManager.getGameSpeedrunner().getName() + " has been removed.");
+                            sender.sendMessage(ChatColor.GREEN
+                                    + compassTracker
+                                            .gameManager
+                                            .getGameSpeedrunner()
+                                            .getName() + " has been removed.");
                             compassTracker.gameManager.removeGameSpeedrunner();
                         }
                     }
@@ -135,7 +151,7 @@ public class CommandCT implements TabExecutor {
             case "listhunters":
                 if (!compassTracker.gameManager.getGameHunters().isEmpty()) {
                     sender.sendMessage(ChatColor.GOLD + "-----------------Hunters-----------------");
-                    for (Player player: compassTracker.gameManager.getGameHunters()) {
+                    for (Player player : compassTracker.gameManager.getGameHunters()) {
                         sender.sendMessage(ChatColor.YELLOW + player.getName());
                     }
                     sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
@@ -156,10 +172,12 @@ public class CommandCT implements TabExecutor {
                     if (compassTracker.gameManager.gameStatus()) {
                         sender.sendMessage(ChatColor.RED + "Game has started already!");
                     } else {
-                        if (compassTracker.gameManager.getGameSpeedrunner() != null && compassTracker.gameManager.getGameHunters().size() >= 1) {
+                        if (compassTracker.gameManager.getGameSpeedrunner() != null
+                                && compassTracker.gameManager.getGameHunters().size() >= 1) {
                             compassTracker.gameManager.startGame();
                         } else {
-                            sender.sendMessage(ChatColor.RED + "Cannot start game. You have not set the player and/or hunter(s).");
+                            sender.sendMessage(
+                                    ChatColor.RED + "Cannot start game. You have not set the player and/or hunter(s).");
                         }
                     }
                 } else {
@@ -183,7 +201,7 @@ public class CommandCT implements TabExecutor {
     }
 
     @Override
-    public List < String > onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!commandArgs.contains(args[0])) {
             return commandArgs;
         } else {

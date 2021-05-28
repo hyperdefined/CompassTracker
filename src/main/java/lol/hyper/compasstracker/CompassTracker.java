@@ -28,13 +28,13 @@ import java.util.logging.Logger;
 
 public final class CompassTracker extends JavaPlugin {
 
+    public final File configFile = new File(this.getDataFolder(), "config.yml");
+    public final Logger logger = this.getLogger();
+    final int configVersion = 1;
     public CommandCT commandCT;
     public Events events;
     public GameManager gameManager;
-    public final File configFile = new File(this.getDataFolder(), "config.yml");
-    public final Logger logger = this.getLogger();
     public FileConfiguration config;
-    final int configVersion = 1;
 
     @Override
     public void onEnable() {
@@ -49,11 +49,12 @@ public final class CompassTracker extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(events, this);
         this.getCommand("ct").setExecutor(commandCT);
         new UpdateChecker(this, 79938).getVersion(version -> {
-        if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-            logger.info("You are running the latest version.");
-        } else {
-            logger.info("There is a new version available! Please download at https://www.spigotmc.org/resources/compasstracker.79938/");
-        }
+            if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                logger.info("You are running the latest version.");
+            } else {
+                logger.info(
+                        "There is a new version available! Please download at https://www.spigotmc.org/resources/compasstracker.79938/");
+            }
         });
         Metrics metrics = new Metrics(this, 9389);
     }
