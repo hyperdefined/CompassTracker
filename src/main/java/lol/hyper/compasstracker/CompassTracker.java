@@ -17,6 +17,13 @@
 
 package lol.hyper.compasstracker;
 
+import lol.hyper.compasstracker.commands.CommandCT;
+import lol.hyper.compasstracker.events.EntityDeath;
+import lol.hyper.compasstracker.events.PlayerInteract;
+import lol.hyper.compasstracker.events.PlayerLeaveJoin;
+import lol.hyper.compasstracker.events.PlayerRespawn;
+import lol.hyper.compasstracker.tools.GameManager;
+import lol.hyper.compasstracker.tools.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,7 +39,10 @@ public final class CompassTracker extends JavaPlugin {
     public final Logger logger = this.getLogger();
     final int configVersion = 1;
     public CommandCT commandCT;
-    public Events events;
+    public EntityDeath entityDeath;
+    public PlayerInteract playerInteract;
+    public PlayerLeaveJoin playerLeaveJoin;
+    public PlayerRespawn playerRespawn;
     public GameManager gameManager;
     public FileConfiguration config;
 
@@ -44,10 +54,20 @@ public final class CompassTracker extends JavaPlugin {
         }
         loadConfig();
         gameManager = new GameManager(this);
-        events = new Events(this);
+        entityDeath = new EntityDeath(this);
+        playerInteract = new PlayerInteract(this);
+        playerLeaveJoin = new PlayerLeaveJoin(this);
+        playerRespawn = new PlayerRespawn(this);
+
         commandCT = new CommandCT(this);
-        Bukkit.getPluginManager().registerEvents(events, this);
+
+        Bukkit.getPluginManager().registerEvents(entityDeath, this);
+        Bukkit.getPluginManager().registerEvents(playerInteract, this);
+        Bukkit.getPluginManager().registerEvents(playerLeaveJoin, this);
+        Bukkit.getPluginManager().registerEvents(playerRespawn, this);
+
         this.getCommand("ct").setExecutor(commandCT);
+
         new UpdateChecker(this, 79938).getVersion(version -> {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
                 logger.info("You are running the latest version.");
@@ -56,6 +76,7 @@ public final class CompassTracker extends JavaPlugin {
                         "There is a new version available! Please download at https://www.spigotmc.org/resources/compasstracker.79938/");
             }
         });
+
         Metrics metrics = new Metrics(this, 9389);
     }
 
