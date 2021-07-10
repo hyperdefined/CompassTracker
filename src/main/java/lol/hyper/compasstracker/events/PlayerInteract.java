@@ -37,6 +37,10 @@ public class PlayerInteract implements Listener {
 
     @EventHandler
     public void onPlayerClicks(PlayerInteractEvent event) {
+        if (!compassTracker.gameManager.gameStatus()) {
+            return;
+        }
+
         if (!compassTracker.config.getBoolean("manual-tracking")) {
             return;
         }

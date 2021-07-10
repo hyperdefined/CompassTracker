@@ -36,6 +36,10 @@ public class PlayerLeaveJoin implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        if (!compassTracker.gameManager.gameStatus()) {
+            return;
+        }
+
         Player player = event.getPlayer();
         if (compassTracker.gameManager.getGameSpeedrunner() == player) {
             Bukkit.broadcastMessage(ChatColor.RED
@@ -47,6 +51,10 @@ public class PlayerLeaveJoin implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
+        if (!compassTracker.gameManager.gameStatus()) {
+            return;
+        }
+
         Player player = event.getEntity();
         if (player == compassTracker.gameManager.getGameSpeedrunner()) {
             Bukkit.broadcastMessage(ChatColor.RED
