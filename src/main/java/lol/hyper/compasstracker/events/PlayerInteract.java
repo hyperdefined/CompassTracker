@@ -20,6 +20,7 @@ package lol.hyper.compasstracker.events;
 import lol.hyper.compasstracker.CompassTracker;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -53,12 +54,7 @@ public class PlayerInteract implements Listener {
                 if (item.getItemMeta().getDisplayName().contains("Tracking Compass")
                         && compassTracker.gameManager.gameStatus()) {
                     if (compassTracker.gameManager.getGameSpeedrunner() != null) {
-                        if (!compassTracker
-                                .gameManager
-                                .getSpeedrunnerLocation()
-                                .getWorld()
-                                .getName()
-                                .equals("world")) {
+                        if (compassTracker.gameManager.getSpeedrunnerLocation().getWorld().getEnvironment() != World.Environment.NORMAL) {
                             player.sendMessage(ChatColor.RED + "Tracker only works in the overworld!");
                         } else {
                             player.setCompassTarget(compassTracker.gameManager.getSpeedrunnerLocation());

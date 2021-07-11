@@ -152,7 +152,7 @@ public class GameManager {
                 .scheduleSyncRepeatingTask(
                         compassTracker,
                         () -> {
-                            if (gameSpeedrunner.getWorld().getName().equals("world")) {
+                            if (gameSpeedrunner.getWorld().getEnvironment() == World.Environment.NORMAL) {
                                 speedrunnerLocation = gameSpeedrunner.getLocation();
                                 if (!compassTracker.config.getBoolean("manual-tracking")) {
                                     for (Player player : gameHunters) {
