@@ -82,7 +82,9 @@ public final class CompassTracker extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        gameManager.endGame();
+        if (gameManager.gameStatus()) {
+            gameManager.endGame();
+        }
     }
 
     public void loadConfig() {
