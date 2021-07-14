@@ -80,6 +80,11 @@ public final class CompassTracker extends JavaPlugin {
         Metrics metrics = new Metrics(this, 9389);
     }
 
+    @Override
+    public void onDisable() {
+        gameManager.endGame();
+    }
+
     public void loadConfig() {
         config = YamlConfiguration.loadConfiguration(configFile);
         if (config.getInt("config-version") != configVersion) {
