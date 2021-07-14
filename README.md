@@ -13,6 +13,7 @@ CompassTracker is a hunter vs. speedrunner plugin. Inspired by Dream's Manhunt s
 
 ## Features
 * Different tracking modes.
+* Use the tracking compass in all worlds (1.16 and above only).
 * Support for multiple hunters who can use the compass.
 * The game will automatically end based on certain conditions.
     * The speedrunner dies.
