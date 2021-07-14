@@ -39,6 +39,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -222,8 +223,16 @@ public class GameManager {
 
         isGameRunning = false;
         gameSpeedrunner = null;
-        for (Player hunters : gameHunters) {
-            hunters.getInventory().remove(Material.COMPASS);
+        for (Player hunter : gameHunters) {
+            PlayerInventory inv = hunter.getInventory();
+            for (int i = 0; i < inv.getContents().length; i++) {
+                ItemStack currentItem = inv.getContents()[i];
+                if (currentItem != null) {
+                    if (currentItem.getType() == Material.COMPASS) {
+                        inv.setItem(i, new ItemStack(Material.AIR));
+                    }
+                }
+            }
         }
         Bukkit.getScheduler().cancelTask(trackerTask);
         Bukkit.broadcastMessage(
@@ -260,16 +269,15 @@ public class GameManager {
     public void setHuntersLodestones() {
         for (Player player : gameHunters) {
             for (ItemStack item : player.getInventory().getContents()) {
-                if (item == null) {
-                    return;
-                }
-                if (item.getType() == Material.COMPASS) {
-                    ItemMeta itemMeta = item.getItemMeta();
-                    if (itemMeta.getDisplayName().equalsIgnoreCase("Tracking Compass")) {
-                        CompassMeta compassMeta = (CompassMeta) itemMeta;
-                        compassMeta.setLodestoneTracked(false);
-                        compassMeta.setLodestone(getSpeedrunnerLocation(player.getWorld()));
-                        item.setItemMeta(compassMeta);
+                if (item != null) {
+                    if (item.getType() == Material.COMPASS) {
+                        ItemMeta itemMeta = item.getItemMeta();
+                        if (itemMeta.getDisplayName().equalsIgnoreCase("Tracking Compass")) {
+                            CompassMeta compassMeta = (CompassMeta) itemMeta;
+                            compassMeta.setLodestoneTracked(false);
+                            compassMeta.setLodestone(getSpeedrunnerLocation(player.getWorld()));
+                            item.setItemMeta(compassMeta);
+                        }
                     }
                 }
             }
