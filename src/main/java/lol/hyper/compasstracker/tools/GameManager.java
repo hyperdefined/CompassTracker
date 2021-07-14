@@ -213,6 +213,7 @@ public class GameManager {
         }
 
         speedrunnerLocations.clear();
+        gameHunters.clear();
 
         long timeElapsed = TimeUnit.SECONDS.convert((System.nanoTime() - startTime), TimeUnit.NANOSECONDS);
         long hours = timeElapsed / 3600;
