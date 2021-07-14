@@ -214,7 +214,6 @@ public class GameManager {
         }
 
         speedrunnerLocations.clear();
-        gameHunters.clear();
 
         long timeElapsed = TimeUnit.SECONDS.convert((System.nanoTime() - startTime), TimeUnit.NANOSECONDS);
         long hours = timeElapsed / 3600;
@@ -225,15 +224,9 @@ public class GameManager {
         gameSpeedrunner = null;
         for (Player hunter : gameHunters) {
             PlayerInventory inv = hunter.getInventory();
-            for (int i = 0; i < inv.getContents().length; i++) {
-                ItemStack currentItem = inv.getContents()[i];
-                if (currentItem != null) {
-                    if (currentItem.getType() == Material.COMPASS) {
-                        inv.setItem(i, new ItemStack(Material.AIR));
-                    }
-                }
-            }
+            inv.remove(Material.COMPASS);
         }
+        gameHunters.clear();
         Bukkit.getScheduler().cancelTask(trackerTask);
         Bukkit.broadcastMessage(
                 ChatColor.GREEN + "Duration: " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
