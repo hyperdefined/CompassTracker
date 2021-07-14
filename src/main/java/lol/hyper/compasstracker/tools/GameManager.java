@@ -260,6 +260,9 @@ public class GameManager {
     public void setHuntersLodestones() {
         for (Player player : gameHunters) {
             for (ItemStack item : player.getInventory().getContents()) {
+                if (item == null) {
+                    return;
+                }
                 if (item.getType() == Material.COMPASS) {
                     ItemMeta itemMeta = item.getItemMeta();
                     if (itemMeta.getDisplayName().equalsIgnoreCase("Tracking Compass")) {
