@@ -19,8 +19,8 @@ package lol.hyper.compasstracker.events;
 
 import lol.hyper.compasstracker.CompassTracker;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -53,20 +53,31 @@ public class PlayerInteract implements Listener {
             if (item != null && item.getType() == Material.COMPASS) {
                 if (item.getItemMeta().getDisplayName().contains("Tracking Compass")
                         && compassTracker.gameManager.gameStatus()) {
-                    if (compassTracker.gameManager.getGameSpeedrunner() != null) {
-                        if (compassTracker.gameManager.getSpeedrunnerLocation().getWorld().getEnvironment() != World.Environment.NORMAL) {
-                            player.sendMessage(ChatColor.RED + "Tracker only works in the overworld!");
-                        } else {
-                            player.setCompassTarget(compassTracker.gameManager.getSpeedrunnerLocation());
-                            player.sendMessage(ChatColor.GREEN + "Updating location of "
-                                    + compassTracker
-                                            .gameManager
-                                            .getGameSpeedrunner()
-                                            .getName() + ".");
+                    if (compassTracker.gameManager.getGameVersion() >= 16) {
+                        Location speedrunnerLocation =
+                                compassTracker.gameManager.getSpeedrunnerLocation(player.getWorld());
+                        if (speedrunnerLocation == null) {
+                            player.sendMessage(ChatColor.RED + "No location exists for this world!");
+                            return;
                         }
+
+                        compassTracker.gameManager.setHuntersLodestones();
+                        player.sendMessage(ChatColor.GREEN + "Updating location of "
+                                + compassTracker
+                                        .gameManager
+                                        .getGameSpeedrunner()
+                                        .getName() + ".");
                     } else {
-                        player.sendMessage(ChatColor.RED + "You haven't set a player! Do /settracker <player>.");
+                        Location speedrunnerLocation = compassTracker.gameManager.getSpeedrunnerLocation(null);
+                        player.setCompassTarget(speedrunnerLocation);
+                        player.sendMessage(ChatColor.GREEN + "Updating location of "
+                                + compassTracker
+                                        .gameManager
+                                        .getGameSpeedrunner()
+                                        .getName() + ".");
                     }
+                } else {
+                    player.sendMessage(ChatColor.RED + "You haven't set a player! Do /settracker <player>.");
                 }
             }
         }

@@ -39,10 +39,12 @@ import org.bukkit.*;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class GameManager {
@@ -50,14 +52,19 @@ public class GameManager {
     private final CompassTracker compassTracker;
 
     private final ArrayList<Player> gameHunters = new ArrayList<>();
+    String bukkitPackageName = Bukkit.getServer().getClass().getPackage().getName();
     private Player gameSpeedrunner = null;
     private Boolean isGameRunning = false;
     private int trackerTask = 0;
-    private Location speedrunnerLocation;
     private long startTime;
+    private String bukkitVersion;
+    private int gameVersion;
+    private HashMap<World, Location> speedrunnerLocations = new HashMap<>();
 
     public GameManager(CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
+        bukkitVersion = bukkitPackageName.substring(bukkitPackageName.lastIndexOf(".") + 1);
+        gameVersion = Integer.parseInt(bukkitVersion.split("_")[1]);
     }
 
     /**
@@ -120,8 +127,12 @@ public class GameManager {
      * Gets speedrunner location.
      * @return The location.
      */
-    public Location getSpeedrunnerLocation() {
-        return speedrunnerLocation;
+    public Location getSpeedrunnerLocation(World world) {
+        // default to overworld
+        if (world == null) {
+            return speedrunnerLocations.get(getOverworld());
+        }
+        return speedrunnerLocations.get(world);
     }
 
     /**
@@ -140,6 +151,20 @@ public class GameManager {
     }
 
     /**
+     * Get the server's main overworld. This only works if the server has just 1 single normal world.
+     * There might be a much better way, but people can change the default world name, so I can't compare it to that.
+     * @return The overworld of the server.
+     */
+    public World getOverworld() {
+        for (World world : Bukkit.getWorlds()) {
+            if (world.getEnvironment() == World.Environment.NORMAL) {
+                return world;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Starts the game.
      */
     public void startGame() {
@@ -152,11 +177,16 @@ public class GameManager {
                 .scheduleSyncRepeatingTask(
                         compassTracker,
                         () -> {
-                            if (gameSpeedrunner.getWorld().getEnvironment() == World.Environment.NORMAL) {
-                                speedrunnerLocation = gameSpeedrunner.getLocation();
-                                if (!compassTracker.config.getBoolean("manual-tracking")) {
+                            World currentWorld = gameSpeedrunner.getWorld();
+                            // save each location per world
+                            speedrunnerLocations.put(currentWorld, gameSpeedrunner.getLocation());
+
+                            if (!compassTracker.config.getBoolean("manual-tracking")) {
+                                if (gameVersion >= 16) {
+                                    setHuntersLodestones();
+                                } else {
                                     for (Player player : gameHunters) {
-                                        player.setCompassTarget(speedrunnerLocation);
+                                        player.setCompassTarget(getSpeedrunnerLocation(null));
                                     }
                                 }
                             }
@@ -167,12 +197,23 @@ public class GameManager {
     }
 
     /**
+     * Get the server's version.
+     * @return The version.
+     */
+    public int getGameVersion() {
+        return gameVersion;
+    }
+
+    /**
      * Ends the game.
      */
     public void endGame() {
         if (compassTracker.config.getBoolean("spawn-firework-on-win")) {
             spawnFirework(gameSpeedrunner);
         }
+
+        speedrunnerLocations.clear();
+
         long timeElapsed = TimeUnit.SECONDS.convert((System.nanoTime() - startTime), TimeUnit.NANOSECONDS);
         long hours = timeElapsed / 3600;
         long minutes = (timeElapsed % 3600) / 60;
@@ -210,5 +251,24 @@ public class GameManager {
         fwmeta.addEffect(builder.withFade(Color.RED).build());
         fwmeta.setPower(0);
         firework.setFireworkMeta(fwmeta);
+    }
+
+    /**
+     * This will set all hunters in the game's lodestone. Only used for 1.16 and above.
+     */
+    public void setHuntersLodestones() {
+        for (Player player : gameHunters) {
+            for (ItemStack item : player.getInventory().getContents()) {
+                if (item.getType() == Material.COMPASS) {
+                    ItemMeta itemMeta = item.getItemMeta();
+                    if (itemMeta.getDisplayName().equalsIgnoreCase("Tracking Compass")) {
+                        CompassMeta compassMeta = (CompassMeta) itemMeta;
+                        compassMeta.setLodestoneTracked(false);
+                        compassMeta.setLodestone(getSpeedrunnerLocation(player.getWorld()));
+                        item.setItemMeta(compassMeta);
+                    }
+                }
+            }
+        }
     }
 }
