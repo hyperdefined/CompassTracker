@@ -23,7 +23,7 @@ CompassTracker is a hunter vs. speedrunner plugin. Inspired by Dream's Manhunt s
 * Very lightweight, super easy to use.
 
 ## Documentation
-Visit the [wiki](https://github.com/hyperdefined/CompassTracker/wiki) for help.
+Visit the [wiki](https://docs.hyper.lol/compasstracker) for help.
 
 ## License
 This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/CompassTracker/blob/master/LICENSE).
