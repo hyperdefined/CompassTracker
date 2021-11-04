@@ -18,10 +18,7 @@
 package lol.hyper.compasstracker;
 
 import lol.hyper.compasstracker.commands.CommandCT;
-import lol.hyper.compasstracker.events.EntityDeath;
-import lol.hyper.compasstracker.events.PlayerInteract;
-import lol.hyper.compasstracker.events.PlayerLeaveJoin;
-import lol.hyper.compasstracker.events.PlayerRespawn;
+import lol.hyper.compasstracker.events.*;
 import lol.hyper.compasstracker.tools.GameManager;
 import lol.hyper.compasstracker.tools.UpdateChecker;
 import org.bstats.bukkit.Metrics;
@@ -37,7 +34,7 @@ public final class CompassTracker extends JavaPlugin {
 
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public final Logger logger = this.getLogger();
-    final int configVersion = 1;
+    final int configVersion = 2;
     public CommandCT commandCT;
     public EntityDeath entityDeath;
     public PlayerInteract playerInteract;
@@ -65,6 +62,9 @@ public final class CompassTracker extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(playerInteract, this);
         Bukkit.getPluginManager().registerEvents(playerLeaveJoin, this);
         Bukkit.getPluginManager().registerEvents(playerRespawn, this);
+        if (config.getString("tracking-mode").equalsIgnoreCase("AUTO")) {
+            Bukkit.getPluginManager().registerEvents(new PlayerMove(gameManager), this);
+        }
 
         this.getCommand("ct").setExecutor(commandCT);
 
@@ -90,7 +90,7 @@ public final class CompassTracker extends JavaPlugin {
     public void loadConfig() {
         config = YamlConfiguration.loadConfiguration(configFile);
         if (config.getInt("config-version") != configVersion) {
-            logger.warning("Your config file is oudated! Please regenerate the config.");
+            logger.warning("Your config file is outdated! Please regenerate the config.");
         }
     }
 }

@@ -1,10 +1,14 @@
-# Use manual tracking. This requires players to right click the compass to update the speedrunner's location.
-# Setting this to false will auto update the compass every 5 seconds, no need to right click.
-# True is the default value.
-manual-tracking: true
+# Set tracking mode to use.
+# Manual: Hunters right-click the compass to update where it's pointing to.
+# Auto: We will get the location every x seconds and change the hunter's compass.
+tracking-mode: manual
+
+# If using the auto mode, how often should we update the compass of the hunter?
+# This number is in seconds.
+auto-tracking-interval: 1
 
 # Spawn a firework to celebrate the player winning.
 spawn-firework-on-win: true
 
 # No touch please :)
-config-version: 1
+config-version: 2

@@ -58,14 +58,21 @@ public class GameManager {
     private Boolean isGameRunning = false;
     private int trackerTask = 0;
     private long startTime;
-    private String bukkitVersion;
-    private int gameVersion;
-    private HashMap<World, Location> speedrunnerLocations = new HashMap<>();
+    private final int gameVersion;
+    public HashMap<World, Location> speedrunnerLocations = new HashMap<>();
+    public String trackingMode;
+    private final int trackingInterval;
 
     public GameManager(CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
-        bukkitVersion = bukkitPackageName.substring(bukkitPackageName.lastIndexOf(".") + 1);
+        String bukkitVersion = bukkitPackageName.substring(bukkitPackageName.lastIndexOf(".") + 1);
         gameVersion = Integer.parseInt(bukkitVersion.split("_")[1]);
+        if (compassTracker.config.getBoolean("manual-tracking")) {
+            trackingMode = "MANUAL";
+        } else {
+            trackingMode = "AUTO";
+        }
+        trackingInterval = compassTracker.config.getInt("auto-tracking-interval");
     }
 
     /**
@@ -174,15 +181,14 @@ public class GameManager {
         for (Player player : gameHunters) {
             player.getInventory().addItem(trackingCompass());
         }
-        trackerTask = Bukkit.getScheduler()
-                .scheduleSyncRepeatingTask(
-                        compassTracker,
-                        () -> {
-                            World currentWorld = gameSpeedrunner.getWorld();
-                            // save each location per world
-                            speedrunnerLocations.put(currentWorld, gameSpeedrunner.getLocation());
-
-                            if (!compassTracker.config.getBoolean("manual-tracking")) {
+        if (trackingMode.equals("AUTO")) {
+            trackerTask = Bukkit.getScheduler()
+                    .scheduleSyncRepeatingTask(
+                            compassTracker,
+                            () -> {
+                                World currentWorld = gameSpeedrunner.getWorld();
+                                // save each location per world
+                                speedrunnerLocations.put(currentWorld, gameSpeedrunner.getLocation());
                                 if (gameVersion >= 16) {
                                     setHuntersLodestones();
                                 } else {
@@ -190,10 +196,10 @@ public class GameManager {
                                         player.setCompassTarget(getSpeedrunnerLocation(null));
                                     }
                                 }
-                            }
-                        },
-                        0L,
-                        60);
+                            },
+                            0L,
+                            60L * trackingInterval);
+        }
         Bukkit.broadcastMessage(ChatColor.GREEN + "Game has started!");
     }
 
@@ -227,7 +233,9 @@ public class GameManager {
             inv.remove(Material.COMPASS);
         }
         gameHunters.clear();
-        Bukkit.getScheduler().cancelTask(trackerTask);
+        if (trackerTask != 0) {
+            Bukkit.getScheduler().cancelTask(trackerTask);
+        }
         Bukkit.broadcastMessage(
                 ChatColor.GREEN + "Duration: " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
     }

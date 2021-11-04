@@ -42,9 +42,10 @@ public class PlayerInteract implements Listener {
             return;
         }
 
-        if (!compassTracker.config.getBoolean("manual-tracking")) {
+        if (!compassTracker.gameManager.trackingMode.equals("AUTO")) {
             return;
         }
+
         Player player = event.getPlayer();
         Action action = event.getAction();
         ItemStack item = event.getItem();
@@ -64,17 +65,17 @@ public class PlayerInteract implements Listener {
                         compassTracker.gameManager.setHuntersLodestones();
                         player.sendMessage(ChatColor.GREEN + "Updating location of "
                                 + compassTracker
-                                        .gameManager
-                                        .getGameSpeedrunner()
-                                        .getName() + ".");
+                                .gameManager
+                                .getGameSpeedrunner()
+                                .getName() + ".");
                     } else {
                         Location speedrunnerLocation = compassTracker.gameManager.getSpeedrunnerLocation(null);
                         player.setCompassTarget(speedrunnerLocation);
                         player.sendMessage(ChatColor.GREEN + "Updating location of "
                                 + compassTracker
-                                        .gameManager
-                                        .getGameSpeedrunner()
-                                        .getName() + ".");
+                                .gameManager
+                                .getGameSpeedrunner()
+                                .getName() + ".");
                     }
                 } else {
                     player.sendMessage(ChatColor.RED + "You haven't set a player! Do /settracker <player>.");
