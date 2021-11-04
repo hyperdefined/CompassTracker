@@ -49,11 +49,11 @@ public class PlayerInteract implements Listener {
         Player player = event.getPlayer();
         Action action = event.getAction();
         ItemStack item = event.getItem();
+        int itemIndex = player.getInventory().getHeldItemSlot();
 
         if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
             if (item != null && item.getType() == Material.COMPASS) {
-                if (item.getItemMeta().getDisplayName().contains("Tracking Compass")
-                        && compassTracker.gameManager.gameStatus()) {
+                if (compassTracker.gameManager.checkCompass(player, itemIndex)) {
                     Location speedrunnerLocation;
                     if (compassTracker.gameManager.getGameVersion() >= 16) {
                         speedrunnerLocation = compassTracker.gameManager.getSpeedrunnerLocation(player.getWorld());

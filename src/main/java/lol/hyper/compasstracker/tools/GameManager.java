@@ -43,6 +43,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -162,8 +164,28 @@ public class GameManager {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.DARK_PURPLE + "Right click to update " + gameSpeedrunner.getName() + "'s last location.");
         meta.setLore(lore);
+        // set some custom PDC on the compasses to track our own custom ones
+        // probably a better way of doing this
+        NamespacedKey key = new NamespacedKey(compassTracker, "tracking-compass");
+        meta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 1);
         compass.setItemMeta(meta);
         return compass;
+    }
+
+    /**
+     * Check to see if a given compass is our custom one.
+     * We do index here because there could be a regular compass.
+     * We don't want to remove all compass ItemStacks in the inventory.
+     *
+     * @param index The index in the player's inventory of the item.
+     */
+    public boolean checkCompass(Player player, int index) {
+        NamespacedKey key = new NamespacedKey(compassTracker, "tracking-compass");
+        ItemStack item = player.getInventory().getItem(index);
+        ItemMeta itemMeta = item.getItemMeta();
+        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+        return container.has(key, PersistentDataType.INTEGER);
     }
 
     /**
@@ -240,7 +262,13 @@ public class GameManager {
         gameSpeedrunner = null;
         for (Player hunter : gameHunters) {
             PlayerInventory inv = hunter.getInventory();
-            inv.remove(Material.COMPASS);
+            for (int i = 0; i < inv.getSize(); i++) {
+                if (inv.getItem(i).getType() == Material.COMPASS) {
+                    if (checkCompass(hunter, i)) {
+                        inv.setItem(i, new ItemStack(Material.AIR));
+                    }
+                }
+            }
         }
         gameHunters.clear();
         if (trackerTask != 0) {
