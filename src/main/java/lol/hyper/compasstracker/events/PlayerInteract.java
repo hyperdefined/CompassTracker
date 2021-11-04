@@ -54,29 +54,23 @@ public class PlayerInteract implements Listener {
             if (item != null && item.getType() == Material.COMPASS) {
                 if (item.getItemMeta().getDisplayName().contains("Tracking Compass")
                         && compassTracker.gameManager.gameStatus()) {
+                    Location speedrunnerLocation;
                     if (compassTracker.gameManager.getGameVersion() >= 16) {
-                        Location speedrunnerLocation =
-                                compassTracker.gameManager.getSpeedrunnerLocation(player.getWorld());
+                        speedrunnerLocation = compassTracker.gameManager.getSpeedrunnerLocation(player.getWorld());
                         if (speedrunnerLocation == null) {
                             player.sendMessage(ChatColor.RED + "No location exists for this world!");
                             return;
                         }
-
                         compassTracker.gameManager.setHuntersLodestones();
-                        player.sendMessage(ChatColor.GREEN + "Updating location of "
-                                + compassTracker
-                                .gameManager
-                                .getGameSpeedrunner()
-                                .getName() + ".");
                     } else {
-                        Location speedrunnerLocation = compassTracker.gameManager.getSpeedrunnerLocation(null);
+                        speedrunnerLocation = compassTracker.gameManager.getSpeedrunnerLocation(null);
                         player.setCompassTarget(speedrunnerLocation);
-                        player.sendMessage(ChatColor.GREEN + "Updating location of "
-                                + compassTracker
-                                .gameManager
-                                .getGameSpeedrunner()
-                                .getName() + ".");
                     }
+                    player.sendMessage(ChatColor.GREEN + "Updating location of "
+                            + compassTracker
+                            .gameManager
+                            .getGameSpeedrunner()
+                            .getName() + ".");
                 } else {
                     player.sendMessage(ChatColor.RED + "You haven't set a player! Do /settracker <player>.");
                 }

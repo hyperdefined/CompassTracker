@@ -77,6 +77,7 @@ public class GameManager {
 
     /**
      * Adds hunter to the game.
+     *
      * @param playerToAdd Hunter to add.
      */
     public void addHunter(Player playerToAdd) {
@@ -85,6 +86,7 @@ public class GameManager {
 
     /**
      * Removes hunter from the game.
+     *
      * @param playerToRemove Hunter to remove.
      */
     public void removeHunter(Player playerToRemove) {
@@ -93,6 +95,7 @@ public class GameManager {
 
     /**
      * Checks if hunter is actually a hunter.
+     *
      * @param hunterToCheck Hunter to check.
      * @return If hunter is on the list.
      */
@@ -102,6 +105,7 @@ public class GameManager {
 
     /**
      * Get the current hunters.
+     *
      * @return The hunters.
      */
     public ArrayList<Player> getGameHunters() {
@@ -110,6 +114,7 @@ public class GameManager {
 
     /**
      * Get who the current speedrunner is.
+     *
      * @return Player who is the speedrunner. Returns null if no one has been set yet.
      */
     public Player getGameSpeedrunner() {
@@ -118,6 +123,7 @@ public class GameManager {
 
     /**
      * Set the speedrunner for the game.
+     *
      * @param playerToSet Player to set.
      */
     public void setGameSpeedrunner(Player playerToSet) {
@@ -133,6 +139,7 @@ public class GameManager {
 
     /**
      * Gets speedrunner location.
+     *
      * @return The location.
      */
     public Location getSpeedrunnerLocation(World world) {
@@ -145,6 +152,7 @@ public class GameManager {
 
     /**
      * Gives the tracking compass.
+     *
      * @return The compass as an ItemStack.
      */
     public ItemStack trackingCompass() {
@@ -161,6 +169,7 @@ public class GameManager {
     /**
      * Get the server's main overworld. This only works if the server has just 1 single normal world.
      * There might be a much better way, but people can change the default world name, so I can't compare it to that.
+     *
      * @return The overworld of the server.
      */
     public World getOverworld() {
@@ -205,6 +214,7 @@ public class GameManager {
 
     /**
      * Get the server's version.
+     *
      * @return The version.
      */
     public int getGameVersion() {
@@ -242,6 +252,7 @@ public class GameManager {
 
     /**
      * Get's the game status.
+     *
      * @return True if the game is running, false if the game is not running.
      */
     public Boolean gameStatus() {
@@ -250,6 +261,7 @@ public class GameManager {
 
     /**
      * Spawn a nice firework.
+     *
      * @param player Player to spawn firework on.
      */
     private void spawnFirework(Player player) {
