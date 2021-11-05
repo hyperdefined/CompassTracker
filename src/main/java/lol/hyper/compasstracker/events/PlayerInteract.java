@@ -42,7 +42,7 @@ public class PlayerInteract implements Listener {
             return;
         }
 
-        if (!compassTracker.gameManager.trackingMode.equals("AUTO")) {
+        if (compassTracker.gameManager.trackingMode.equals("AUTO")) {
             return;
         }
 
