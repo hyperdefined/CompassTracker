@@ -3,6 +3,8 @@ version: ${project.version}
 main: lol.hyper.compasstracker.CompassTracker
 api-version: 1.13
 author: hyperdefined
+website: https://www.spigotmc.org/resources/compasstracker.79938/
+description: A hunter vs. speedrunner plugin.
 permission:
   compasstracker.start:
     default: op
