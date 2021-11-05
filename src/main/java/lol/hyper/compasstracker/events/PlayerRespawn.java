@@ -38,7 +38,7 @@ public class PlayerRespawn implements Listener {
         }
 
         Player player = event.getPlayer();
-        if (compassTracker.gameManager.gameStatus() && compassTracker.gameManager.isHunterListed(player)) {
+        if (compassTracker.gameManager.isHunterListed(player)) {
             player.getInventory().addItem(compassTracker.gameManager.trackingCompass());
         }
     }
