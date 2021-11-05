@@ -78,7 +78,7 @@ public class GameManager {
         }
         if (trackingMode == null) {
             compassTracker.logger.warning("Invalid tracking mode!");
-            endGame();
+            endGame(false);
         }
         trackingInterval = compassTracker.config.getInt("auto-tracking-interval");
     }
@@ -252,8 +252,8 @@ public class GameManager {
     /**
      * Ends the game.
      */
-    public void endGame() {
-        if (compassTracker.config.getBoolean("spawn-firework-on-win")) {
+    public void endGame(boolean won) {
+        if (compassTracker.config.getBoolean("spawn-firework-on-win") && won) {
             spawnFirework(gameSpeedrunner);
         }
 
@@ -269,6 +269,9 @@ public class GameManager {
         for (Player hunter : gameHunters) {
             PlayerInventory inv = hunter.getInventory();
             for (int i = 0; i < inv.getSize(); i++) {
+                if (inv.getItem(i) == null) {
+                    continue;
+                }
                 if (inv.getItem(i).getType() == Material.COMPASS) {
                     if (checkCompass(hunter, i)) {
                         inv.setItem(i, new ItemStack(Material.AIR));
@@ -277,7 +280,7 @@ public class GameManager {
             }
         }
         gameHunters.clear();
-        if (trackerTask != -1) {
+        if (Bukkit.getScheduler().isCurrentlyRunning(trackerTask)) {
             Bukkit.getScheduler().cancelTask(trackerTask);
         }
         Bukkit.broadcastMessage(

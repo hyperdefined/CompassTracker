@@ -45,7 +45,7 @@ public class PlayerLeaveJoin implements Listener {
             Bukkit.broadcastMessage(ChatColor.RED
                     + compassTracker.gameManager.getGameSpeedrunner().getName()
                     + " has left the server! Stopping game!");
-            compassTracker.gameManager.endGame();
+            compassTracker.gameManager.endGame(false);
         }
     }
 
@@ -59,7 +59,7 @@ public class PlayerLeaveJoin implements Listener {
         if (player == compassTracker.gameManager.getGameSpeedrunner()) {
             Bukkit.broadcastMessage(ChatColor.RED
                     + compassTracker.gameManager.getGameSpeedrunner().getName() + " has died! Stopping game!");
-            compassTracker.gameManager.endGame();
+            compassTracker.gameManager.endGame(false);
         }
     }
 }

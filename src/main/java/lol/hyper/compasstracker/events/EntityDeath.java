@@ -43,7 +43,7 @@ public class EntityDeath implements Listener {
             Player player = (Player) event.getEntity();
             if (compassTracker.gameManager.getGameSpeedrunner().equals(player)) {
                 Bukkit.broadcastMessage(ChatColor.RED + player.getName() + " has died! The hunters win!");
-                compassTracker.gameManager.endGame();
+                compassTracker.gameManager.endGame(false);
             }
         }
         if (event.getEntity() instanceof EnderDragon) {
@@ -51,7 +51,7 @@ public class EntityDeath implements Listener {
             if (player == compassTracker.gameManager.getGameSpeedrunner()) {
                 Bukkit.broadcastMessage(
                         ChatColor.GREEN + player.getName() + " has won the game! They killed the Ender Dragon!");
-                compassTracker.gameManager.endGame();
+                compassTracker.gameManager.endGame(true);
             }
         }
     }
