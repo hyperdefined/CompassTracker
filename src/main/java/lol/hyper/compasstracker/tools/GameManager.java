@@ -58,21 +58,27 @@ public class GameManager {
     String bukkitPackageName = Bukkit.getServer().getClass().getPackage().getName();
     private Player gameSpeedrunner = null;
     private Boolean isGameRunning = false;
-    private int trackerTask = 0;
+    private int trackerTask = -1;
     private long startTime;
     private final int gameVersion;
     public HashMap<World, Location> speedrunnerLocations = new HashMap<>();
-    public String trackingMode;
+    public String trackingMode = null;
     private final int trackingInterval;
 
     public GameManager(CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
         String bukkitVersion = bukkitPackageName.substring(bukkitPackageName.lastIndexOf(".") + 1);
         gameVersion = Integer.parseInt(bukkitVersion.split("_")[1]);
-        if (compassTracker.config.getBoolean("manual-tracking")) {
+        String mode = compassTracker.config.getString("tracking-mode");
+        if (mode.equalsIgnoreCase("manual")) {
             trackingMode = "MANUAL";
-        } else {
+        }
+        if (mode.equalsIgnoreCase("auto")) {
             trackingMode = "AUTO";
+        }
+        if (trackingMode == null) {
+            compassTracker.logger.warning("Invalid tracking mode!");
+            endGame();
         }
         trackingInterval = compassTracker.config.getInt("auto-tracking-interval");
     }
@@ -271,7 +277,7 @@ public class GameManager {
             }
         }
         gameHunters.clear();
-        if (trackerTask != 0) {
+        if (trackerTask != -1) {
             Bukkit.getScheduler().cancelTask(trackerTask);
         }
         Bukkit.broadcastMessage(
