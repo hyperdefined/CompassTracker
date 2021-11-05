@@ -33,7 +33,7 @@ public class PlayerRespawn implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        if (!compassTracker.gameManager.gameStatus()) {
+        if (!compassTracker.gameManager.isGameRunning) {
             return;
         }
 

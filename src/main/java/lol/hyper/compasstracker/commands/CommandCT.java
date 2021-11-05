@@ -75,7 +75,7 @@ public class CommandCT implements TabExecutor {
                 break;
             case "setplayer":
                 if (sender.hasPermission("compasstracker.setplayer")) {
-                    if (compassTracker.gameManager.gameStatus()) {
+                    if (compassTracker.gameManager.isGameRunning) {
                         sender.sendMessage(ChatColor.RED + "Cannot set player. There is a game right now.");
                     } else {
                         if (Bukkit.getPlayerExact(args[1]) != null) {
@@ -95,7 +95,7 @@ public class CommandCT implements TabExecutor {
                 break;
             case "removeplayer":
                 if (sender.hasPermission("compasstracker.removeplayer")) {
-                    if (compassTracker.gameManager.gameStatus()) {
+                    if (compassTracker.gameManager.isGameRunning) {
                         sender.sendMessage(ChatColor.RED + "Cannot remove player. There is a game right now!");
                     } else {
                         if (compassTracker.gameManager.getGameSpeedrunner() == null) {
@@ -170,7 +170,7 @@ public class CommandCT implements TabExecutor {
                 break;
             case "start":
                 if (sender.hasPermission("compasstracker.start")) {
-                    if (compassTracker.gameManager.gameStatus()) {
+                    if (compassTracker.gameManager.isGameRunning) {
                         sender.sendMessage(ChatColor.RED + "Game has started already!");
                     } else {
                         if (compassTracker.gameManager.getGameSpeedrunner() != null
@@ -187,7 +187,7 @@ public class CommandCT implements TabExecutor {
                 break;
             case "stop":
                 if (sender.hasPermission("compasstracker.stop")) {
-                    if (!compassTracker.gameManager.gameStatus()) {
+                    if (!compassTracker.gameManager.isGameRunning) {
                         sender.sendMessage(ChatColor.RED + "Game has not started yet!");
                     } else {
                         compassTracker.gameManager.endGame(false);

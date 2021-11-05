@@ -15,31 +15,31 @@
  * along with CompassTracker.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package lol.hyper.compasstracker.events;
+package lol.hyper.compasstracker.tools;
 
-import lol.hyper.compasstracker.tools.GameManager;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
-public class PlayerMove implements Listener {
+public class AutoTrackingTask extends BukkitRunnable {
 
     private final GameManager gameManager;
 
-    public PlayerMove(GameManager gameManager) {
+    public AutoTrackingTask(GameManager gameManager) {
         this.gameManager = gameManager;
     }
 
-    @EventHandler
-    public void onMove(PlayerMoveEvent event) {
-        if (!gameManager.isGameRunning) {
-            return;
-        }
-
-        Player player = event.getPlayer();
-        if (gameManager.getGameSpeedrunner().equals(player)) {
-            gameManager.speedrunnerLocations.put(player.getWorld(), player.getLocation());
+    @Override
+    public void run() {
+        World currentWorld = gameManager.gameSpeedrunner.getWorld();
+        // save each location per world
+        gameManager.speedrunnerLocations.put(currentWorld, gameManager.gameSpeedrunner.getLocation());
+        if (gameManager.gameVersion >= 16) {
+            gameManager.setHuntersLodestones();
+        } else {
+            for (Player player : gameManager.gameHunters) {
+                player.setCompassTarget(gameManager.getSpeedrunnerLocation(null));
+            }
         }
     }
 }

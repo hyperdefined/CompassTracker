@@ -45,6 +45,9 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,13 +57,13 @@ public class GameManager {
 
     private final CompassTracker compassTracker;
 
-    private final ArrayList<Player> gameHunters = new ArrayList<>();
+    public final ArrayList<Player> gameHunters = new ArrayList<>();
     String bukkitPackageName = Bukkit.getServer().getClass().getPackage().getName();
-    private Player gameSpeedrunner = null;
-    private Boolean isGameRunning = false;
-    private int trackerTask = -1;
+    public Player gameSpeedrunner = null;
+    public Boolean isGameRunning = false;
     private long startTime;
-    private final int gameVersion;
+    private AutoTrackingTask autoTrackingTask;
+    public final int gameVersion;
     public HashMap<World, Location> speedrunnerLocations = new HashMap<>();
     public String trackingMode = null;
     private final int trackingInterval;
@@ -219,23 +222,8 @@ public class GameManager {
             player.getInventory().addItem(trackingCompass());
         }
         if (trackingMode.equals("AUTO")) {
-            trackerTask = Bukkit.getScheduler()
-                    .scheduleSyncRepeatingTask(
-                            compassTracker,
-                            () -> {
-                                World currentWorld = gameSpeedrunner.getWorld();
-                                // save each location per world
-                                speedrunnerLocations.put(currentWorld, gameSpeedrunner.getLocation());
-                                if (gameVersion >= 16) {
-                                    setHuntersLodestones();
-                                } else {
-                                    for (Player player : gameHunters) {
-                                        player.setCompassTarget(getSpeedrunnerLocation(null));
-                                    }
-                                }
-                            },
-                            0L,
-                            60L * trackingInterval);
+            autoTrackingTask = new AutoTrackingTask(this);
+            autoTrackingTask.runTaskTimer(compassTracker, 0, 20L * trackingInterval);
         }
         Bukkit.broadcastMessage(ChatColor.GREEN + "Game has started!");
     }
@@ -253,6 +241,8 @@ public class GameManager {
      * Ends the game.
      */
     public void endGame(boolean won) {
+        autoTrackingTask.cancel();
+
         if (compassTracker.config.getBoolean("spawn-firework-on-win") && won) {
             spawnFirework(gameSpeedrunner);
         }
@@ -264,8 +254,8 @@ public class GameManager {
         long minutes = (timeElapsed % 3600) / 60;
         long seconds = timeElapsed % 60;
 
-        isGameRunning = false;
         gameSpeedrunner = null;
+        isGameRunning = false;
         for (Player hunter : gameHunters) {
             PlayerInventory inv = hunter.getInventory();
             for (int i = 0; i < inv.getSize(); i++) {
@@ -280,20 +270,8 @@ public class GameManager {
             }
         }
         gameHunters.clear();
-        if (Bukkit.getScheduler().isCurrentlyRunning(trackerTask)) {
-            Bukkit.getScheduler().cancelTask(trackerTask);
-        }
         Bukkit.broadcastMessage(
                 ChatColor.GREEN + "Duration: " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
-    }
-
-    /**
-     * Get's the game status.
-     *
-     * @return True if the game is running, false if the game is not running.
-     */
-    public Boolean gameStatus() {
-        return isGameRunning;
     }
 
     /**

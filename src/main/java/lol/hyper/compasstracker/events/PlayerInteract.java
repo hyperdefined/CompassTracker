@@ -38,7 +38,7 @@ public class PlayerInteract implements Listener {
 
     @EventHandler
     public void onPlayerClicks(PlayerInteractEvent event) {
-        if (!compassTracker.gameManager.gameStatus()) {
+        if (!compassTracker.gameManager.isGameRunning) {
             return;
         }
 

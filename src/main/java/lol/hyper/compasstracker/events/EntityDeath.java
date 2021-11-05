@@ -36,7 +36,7 @@ public class EntityDeath implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
-        if (!compassTracker.gameManager.gameStatus()) {
+        if (!compassTracker.gameManager.isGameRunning) {
             return;
         }
         if (event.getEntity() instanceof Player) {

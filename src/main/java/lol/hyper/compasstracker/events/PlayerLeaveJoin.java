@@ -36,7 +36,7 @@ public class PlayerLeaveJoin implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if (!compassTracker.gameManager.gameStatus()) {
+        if (!compassTracker.gameManager.isGameRunning) {
             return;
         }
 
@@ -51,7 +51,7 @@ public class PlayerLeaveJoin implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (!compassTracker.gameManager.gameStatus()) {
+        if (!compassTracker.gameManager.isGameRunning) {
             return;
         }
 
