@@ -5,19 +5,25 @@ api-version: 1.13
 author: hyperdefined
 website: https://www.spigotmc.org/resources/compasstracker.79938/
 description: A hunter vs. speedrunner plugin.
-permission:
+permissions:
   compasstracker.start:
     default: op
+    description: Allows the usage of /ct start
   compasstracker.setplayer:
     default: op
+    description: Allows the usage of /ct setplayer
   compasstracker.stop:
     default: op
+    description: Allows the usage of /ct stop
   compasstracker.removeplayer:
     default: op
+    description: Allows the usage of /ct removeplayer
   compasstracker.addhunter:
     default: op
+    description: Allows the usage of /ct addhunter
   compasstracker.removehunter:
     default: op
+    description: Allows the usage of /ct removehunter
 commands:
   ct:
     usage: /ct
