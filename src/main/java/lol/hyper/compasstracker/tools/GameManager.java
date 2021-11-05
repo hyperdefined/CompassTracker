@@ -241,7 +241,9 @@ public class GameManager {
      * Ends the game.
      */
     public void endGame(boolean won) {
-        autoTrackingTask.cancel();
+        if (trackingMode.equals("AUTO")) {
+            autoTrackingTask.cancel();
+        }
 
         if (compassTracker.config.getBoolean("spawn-firework-on-win") && won) {
             spawnFirework(gameSpeedrunner);
