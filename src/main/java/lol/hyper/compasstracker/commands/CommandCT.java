@@ -190,7 +190,7 @@ public class CommandCT implements TabExecutor {
                     if (!compassTracker.gameManager.gameStatus()) {
                         sender.sendMessage(ChatColor.RED + "Game has not started yet!");
                     } else {
-                        compassTracker.gameManager.endGame();
+                        compassTracker.gameManager.endGame(false);
                         Bukkit.broadcastMessage(ChatColor.RED + "Game was stopped!");
                     }
                 } else {
