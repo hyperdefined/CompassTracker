@@ -27,5 +27,8 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.28" level="project" />
     <orderEntry type="library" name="Maven: org.bstats:bstats-bukkit:2.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.bstats:bstats-base:2.2.1" level="project" />
+    <orderEntry type="library" name="Maven: lol.hyper:github-release-api:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20210307" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains:annotations:23.0.0" level="project" />
   </component>
 </module>

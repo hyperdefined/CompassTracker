@@ -20,7 +20,8 @@ package lol.hyper.compasstracker;
 import lol.hyper.compasstracker.commands.CommandCT;
 import lol.hyper.compasstracker.events.*;
 import lol.hyper.compasstracker.tools.GameManager;
-import lol.hyper.compasstracker.tools.UpdateChecker;
+import lol.hyper.githubreleaseapi.GitHubRelease;
+import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,6 +29,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public final class CompassTracker extends JavaPlugin {
@@ -68,16 +70,9 @@ public final class CompassTracker extends JavaPlugin {
 
         this.getCommand("ct").setExecutor(commandCT);
 
-        new UpdateChecker(this, 79938).getVersion(version -> {
-            if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                logger.info("You are running the latest version.");
-            } else {
-                logger.info(
-                        "There is a new version available! Please download at https://www.spigotmc.org/resources/compasstracker.79938/");
-            }
-        });
+        new Metrics(this, 9389);
 
-        Metrics metrics = new Metrics(this, 9389);
+        Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
     }
 
     @Override
@@ -91,6 +86,29 @@ public final class CompassTracker extends JavaPlugin {
         config = YamlConfiguration.loadConfiguration(configFile);
         if (config.getInt("config-version") != configVersion) {
             logger.warning("Your config file is outdated! Please regenerate the config.");
+        }
+    }
+
+    public void checkForUpdates() {
+        GitHubReleaseAPI api;
+        try {
+            api = new GitHubReleaseAPI("CompassTracker", "hyperdefined");
+        } catch (IOException e) {
+            logger.warning("Unable to check updates!");
+            e.printStackTrace();
+            return;
+        }
+        GitHubRelease current = api.getReleaseByTag(this.getDescription().getVersion());
+        GitHubRelease latest = api.getLatestVersion();
+        if (current == null) {
+            logger.warning("You are running a version that does not exist on GitHub. If you are in a dev environment, you can ignore this. Otherwise, this is a bug!");
+            return;
+        }
+        int buildsBehind = api.getBuildsBehind(current);
+        if (buildsBehind == 0) {
+            logger.info("You are running the latest version.");
+        } else {
+            logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
         }
     }
 }
