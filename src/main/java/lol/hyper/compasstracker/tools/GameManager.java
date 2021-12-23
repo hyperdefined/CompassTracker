@@ -224,6 +224,8 @@ public class GameManager {
         if (trackingMode.equals("AUTO")) {
             autoTrackingTask = new AutoTrackingTask(this);
             autoTrackingTask.runTaskTimer(compassTracker, 0, 20L * trackingInterval);
+        } else {
+            speedrunnerLocations.put(gameSpeedrunner.getWorld(), gameSpeedrunner.getLocation());
         }
         Bukkit.broadcastMessage(ChatColor.GREEN + "Game has started!");
     }

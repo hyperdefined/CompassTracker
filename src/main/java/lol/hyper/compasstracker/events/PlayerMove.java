@@ -23,6 +23,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.util.UUID;
+
 public class PlayerMove implements Listener {
 
     private final GameManager gameManager;
@@ -38,7 +40,7 @@ public class PlayerMove implements Listener {
         }
 
         Player player = event.getPlayer();
-        if (gameManager.getGameSpeedrunner().equals(player)) {
+        if (gameManager.getGameSpeedrunner().getUniqueId() == player.getUniqueId()) {
             gameManager.speedrunnerLocations.put(player.getWorld(), player.getLocation());
         }
     }

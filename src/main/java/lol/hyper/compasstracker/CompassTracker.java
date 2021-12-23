@@ -42,6 +42,7 @@ public final class CompassTracker extends JavaPlugin {
     public PlayerInteract playerInteract;
     public PlayerLeaveJoin playerLeaveJoin;
     public PlayerRespawn playerRespawn;
+    public PlayerMove playerMove;
     public GameManager gameManager;
     public FileConfiguration config;
 
@@ -57,6 +58,7 @@ public final class CompassTracker extends JavaPlugin {
         playerInteract = new PlayerInteract(this);
         playerLeaveJoin = new PlayerLeaveJoin(this);
         playerRespawn = new PlayerRespawn(this);
+        playerMove = new PlayerMove(gameManager);
 
         commandCT = new CommandCT(this);
 
@@ -64,6 +66,7 @@ public final class CompassTracker extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(playerInteract, this);
         Bukkit.getPluginManager().registerEvents(playerLeaveJoin, this);
         Bukkit.getPluginManager().registerEvents(playerRespawn, this);
+        Bukkit.getPluginManager().registerEvents(playerMove, this);
         if (config.getString("tracking-mode").equalsIgnoreCase("AUTO")) {
             Bukkit.getPluginManager().registerEvents(new PlayerMove(gameManager), this);
         }
