@@ -218,14 +218,24 @@ public class GameManager {
     public void startGame() {
         startTime = System.nanoTime();
         isGameRunning = true;
+
+        getOverworld().setTime(0L);
+
+        gameSpeedrunner.getInventory().clear();
+        gameSpeedrunner.setHealth(20);
+        gameSpeedrunner.setFoodLevel(20);
+        gameSpeedrunner.setSaturation(20);
+
         for (Player player : gameHunters) {
+            player.getInventory().clear();
+            player.setHealth(20);
+            gameSpeedrunner.setFoodLevel(20);
+            gameSpeedrunner.setSaturation(20);
             player.getInventory().addItem(trackingCompass());
         }
         if (trackingMode.equals("AUTO")) {
             autoTrackingTask = new AutoTrackingTask(this);
             autoTrackingTask.runTaskTimer(compassTracker, 0, 20L * trackingInterval);
-        } else {
-            speedrunnerLocations.put(gameSpeedrunner.getWorld(), gameSpeedrunner.getLocation());
         }
         Bukkit.broadcastMessage(ChatColor.GREEN + "Game has started!");
     }
