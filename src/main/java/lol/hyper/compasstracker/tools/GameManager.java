@@ -229,8 +229,8 @@ public class GameManager {
         for (Player player : gameHunters) {
             player.getInventory().clear();
             player.setHealth(20);
-            gameSpeedrunner.setFoodLevel(20);
-            gameSpeedrunner.setSaturation(20);
+            player.setFoodLevel(20);
+            player.setSaturation(20);
             player.getInventory().addItem(trackingCompass());
         }
         if (trackingMode.equals("AUTO")) {
