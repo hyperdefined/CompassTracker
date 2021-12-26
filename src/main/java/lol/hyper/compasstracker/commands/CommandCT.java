@@ -59,7 +59,7 @@ public class CommandCT implements TabExecutor {
         }
 
         switch (args[0]) {
-            case "help":
+            case "help": {
                 sender.sendMessage(ChatColor.GOLD + "-----------------Compass Tracker-----------------");
                 sender.sendMessage(ChatColor.YELLOW + "/ct help - Shows this menu.");
                 sender.sendMessage(ChatColor.YELLOW + "/ct setplayer <player> - Set player to be tracked.");
@@ -74,7 +74,8 @@ public class CommandCT implements TabExecutor {
                 sender.sendMessage(ChatColor.YELLOW + "/ct stop - Stops the game.");
                 sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
                 break;
-            case "setplayer":
+            }
+            case "setplayer": {
                 if (sender.hasPermission("compasstracker.setplayer")) {
                     if (compassTracker.gameManager.isGameRunning) {
                         sender.sendMessage(ChatColor.RED + "Cannot set player. There is a game right now.");
@@ -94,7 +95,8 @@ public class CommandCT implements TabExecutor {
                     sender.sendMessage(ChatColor.RED + "You don't have permissions to set the player.");
                 }
                 break;
-            case "removeplayer":
+            }
+            case "removeplayer": {
                 if (sender.hasPermission("compasstracker.removeplayer")) {
                     if (compassTracker.gameManager.isGameRunning) {
                         sender.sendMessage(ChatColor.RED + "Cannot remove player. There is a game right now!");
@@ -114,7 +116,8 @@ public class CommandCT implements TabExecutor {
                     sender.sendMessage(ChatColor.RED + "You do not have permission remove player from being tracked.");
                 }
                 break;
-            case "addhunter":
+            }
+            case "addhunter": {
                 if (sender.hasPermission("compasstracker.addhunter")) {
                     if (Bukkit.getPlayerExact(args[1]) != null) {
                         if (compassTracker.gameManager.getGameSpeedrunner() != Bukkit.getPlayerExact(args[1])) {
@@ -134,7 +137,8 @@ public class CommandCT implements TabExecutor {
                     sender.sendMessage(ChatColor.RED + "You do not have permission add a hunter.");
                 }
                 break;
-            case "removehunter":
+            }
+            case "removehunter": {
                 if (sender.hasPermission("compasstracker.removehunter")) {
                     if (Bukkit.getPlayerExact(args[1]) != null) {
                         if (compassTracker.gameManager.isHunterListed(Bukkit.getPlayerExact(args[1]))) {
@@ -150,7 +154,8 @@ public class CommandCT implements TabExecutor {
                     sender.sendMessage(ChatColor.RED + "You do not have permission remove a hunter.");
                 }
                 break;
-            case "listhunters":
+            }
+            case "listhunters": {
                 if (!compassTracker.gameManager.getGameHunters().isEmpty()) {
                     sender.sendMessage(ChatColor.GOLD + "-----------------Hunters-----------------");
                     for (Player player : compassTracker.gameManager.getGameHunters()) {
@@ -161,7 +166,8 @@ public class CommandCT implements TabExecutor {
                     sender.sendMessage(ChatColor.RED + "There are currently no hunters.");
                 }
                 break;
-            case "givecompass":
+            }
+            case "givecompass": {
                 Player player = (Player) sender;
                 if (compassTracker.gameManager.getGameHunters().contains(player)) {
                     player.getInventory().addItem(compassTracker.gameManager.trackingCompass());
@@ -169,7 +175,8 @@ public class CommandCT implements TabExecutor {
                     sender.sendMessage(ChatColor.RED + "You are not a hunter!");
                 }
                 break;
-            case "start":
+            }
+            case "start": {
                 if (sender.hasPermission("compasstracker.start")) {
                     if (compassTracker.gameManager.isGameRunning) {
                         sender.sendMessage(ChatColor.RED + "Game has started already!");
@@ -186,7 +193,8 @@ public class CommandCT implements TabExecutor {
                     sender.sendMessage(ChatColor.RED + "You do not have permission to start the game.");
                 }
                 break;
-            case "stop":
+            }
+            case "stop": {
                 if (sender.hasPermission("compasstracker.stop")) {
                     if (!compassTracker.gameManager.isGameRunning) {
                         sender.sendMessage(ChatColor.RED + "Game has not started yet!");
@@ -198,6 +206,7 @@ public class CommandCT implements TabExecutor {
                     sender.sendMessage(ChatColor.RED + "You do not have permission to stop the game.");
                 }
                 break;
+            }
         }
         return true;
     }
