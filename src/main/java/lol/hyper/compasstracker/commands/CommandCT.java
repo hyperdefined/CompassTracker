@@ -25,6 +25,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +50,7 @@ public class CommandCT implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0 || sender instanceof ConsoleCommandSender) {
             sender.sendMessage(ChatColor.GREEN + "CompassTracker version "
                     + compassTracker.getDescription().getVersion() + ". Created by hyperdefined.");
@@ -202,7 +203,7 @@ public class CommandCT implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         if (!commandArgs.contains(args[0])) {
             return commandArgs;
         } else {
