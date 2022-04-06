@@ -66,7 +66,6 @@ public final class CompassTracker extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(playerInteract, this);
         Bukkit.getPluginManager().registerEvents(playerLeaveJoin, this);
         Bukkit.getPluginManager().registerEvents(playerRespawn, this);
-        Bukkit.getPluginManager().registerEvents(playerMove, this);
         if (config.getString("tracking-mode").equalsIgnoreCase("AUTO")) {
             Bukkit.getPluginManager().registerEvents(new PlayerMove(gameManager), this);
         }
