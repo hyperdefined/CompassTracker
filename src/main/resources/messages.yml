@@ -1,0 +1,47 @@
+errors:
+  game-running: "<red>There is already a game running.</red>"
+  no-game-running: "<red>There is not a gaming running.</red>"
+  player-does-not-exist: "<red>That player does not exist.</red>"
+  no-permission: "<red>You don't have permissions for this command.</red>"
+commands:
+  setplayer:
+    target-player: "<green>%player% has been set as the target player.</green>"
+    already-hunter: "<red>That player is a hunter! Cannot set as player.</red>"
+  removeplayer:
+    removed: "<green>%player% has been removed.</green>"
+    not-one-set: "<red>Cannot remove player. There is not one set.</red>"
+  addhunter:
+    added: "<green>%player% has been added as a hunter!</green>"
+    already-hunter: "<red>%player% is already a hunter.</red>"
+    target-player: "<red>%player% is being hunted.</red>"
+  removehunter:
+    removed: "<green>%player% has been removed as a hunter!</green>"
+    not-a-hunter: "<red>%player% is not a hunter.</red>"
+  listhunters:
+    no-hunters: "<red>There are no hunters</red>"
+    command:
+      - "<gold>-----------------Hunters-----------------</gold>"
+      - "<yellow>%hunters%</hunters>"
+      - "<gold>--------------------------------------------</gold>"
+  givecompass:
+    not-a-hunter: "<red>You are not a hunter!</red>"
+  start:
+    not-ready: "<red>Cannot start game. You have not set the player and/or hunter(s).</red>"
+
+compass-right-click:
+  no-location: "<red>No location exists for this world!</red>"
+  updating-location: "<green>Updating location of %player%.</green>"
+  no-player-set: "<red>You haven't set a player! Do /ct setplayer <player>.</red>"
+
+game-end:
+  stopped: "<red>Game was stopped!</red>"
+  player-leave: "<red>%player% has left the server! Stopping game.</red>"
+  player-died: "<red>%player% has died! Stopping game.</red>"
+  duration: "<green>Duration: %time%</green>"
+  hunters-win: "<green>%player% has died! The hunters win!</green>"
+  player-win: "<green>%player% has won the game! They killed the Ender Dragon!</green>"
+
+game-start:
+  start: "</green>Game has started!</green>"
+
+version: 1

@@ -18,7 +18,6 @@
 package lol.hyper.compasstracker.events;
 
 import lol.hyper.compasstracker.CompassTracker;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -58,7 +57,7 @@ public class PlayerInteract implements Listener {
                     if (compassTracker.gameManager.getGameVersion() >= 16) {
                         speedrunnerLocation = compassTracker.gameManager.getSpeedrunnerLocation(player.getWorld());
                         if (speedrunnerLocation == null) {
-                            player.sendMessage(ChatColor.RED + "No location exists for this world!");
+                            compassTracker.getAdventure().sender(player).sendMessage(compassTracker.getMessage("compass-right-click.no-location", null));
                             return;
                         }
                         compassTracker.gameManager.setHuntersLodestones();
@@ -66,13 +65,9 @@ public class PlayerInteract implements Listener {
                         speedrunnerLocation = compassTracker.gameManager.getSpeedrunnerLocation(null);
                         player.setCompassTarget(speedrunnerLocation);
                     }
-                    player.sendMessage(ChatColor.GREEN + "Updating location of "
-                            + compassTracker
-                            .gameManager
-                            .getGameSpeedrunner()
-                            .getName() + ".");
+                    compassTracker.getAdventure().sender(player).sendMessage(compassTracker.getMessage("compass-right-click.updating-location", player.getName()));
                 } else {
-                    player.sendMessage(ChatColor.RED + "You haven't set a player! Do /settracker <player>.");
+                    compassTracker.getAdventure().sender(player).sendMessage(compassTracker.getMessage("compass-right-click.no-player-set", null));
                 }
             }
         }

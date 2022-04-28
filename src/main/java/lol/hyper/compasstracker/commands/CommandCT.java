@@ -18,8 +18,10 @@
 package lol.hyper.compasstracker.commands;
 
 import lol.hyper.compasstracker.CompassTracker;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -45,125 +47,129 @@ public class CommandCT implements TabExecutor {
             "start",
             "stop");
 
+    private final BukkitAudiences audiences;
+    private final MiniMessage miniMessage;
+
     public CommandCT(CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
+        this.audiences = compassTracker.getAdventure();
+        this.miniMessage = compassTracker.miniMessage;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0 || sender instanceof ConsoleCommandSender) {
-            sender.sendMessage(ChatColor.GREEN + "CompassTracker version "
-                    + compassTracker.getDescription().getVersion() + ". Created by hyperdefined.");
-            sender.sendMessage(ChatColor.GREEN + "Use /ct help for command help.");
+            audiences.sender(sender).sendMessage(miniMessage.deserialize("<green>CompassTracker version " + compassTracker.getDescription().getVersion() + ". Created by hyperdefined.</green>"));
+            audiences.sender(sender).sendMessage(miniMessage.deserialize("<green>Use /ct help for command help.</green>"));
             return true;
         }
 
         switch (args[0]) {
             case "help": {
-                sender.sendMessage(ChatColor.GOLD + "-----------------Compass Tracker-----------------");
-                sender.sendMessage(ChatColor.YELLOW + "/ct help - Shows this menu.");
-                sender.sendMessage(ChatColor.YELLOW + "/ct setplayer <player> - Set player to be tracked.");
-                sender.sendMessage(ChatColor.YELLOW + "/ct removeplayer - Remove player from being tracked.");
-                sender.sendMessage(ChatColor.YELLOW
-                        + "/ct addhunter - Add player to hunter list. Hunters will get the tracking compass.");
-                sender.sendMessage(ChatColor.YELLOW + "/ct removehunter - Remove hunter from list.");
-                sender.sendMessage(ChatColor.YELLOW + "/ct listhunters - See who the hunter(s) are.");
-                sender.sendMessage(
-                        ChatColor.YELLOW + "/ct givecompass - Give yourself the tracking compass. Hunters only.");
-                sender.sendMessage(ChatColor.YELLOW + "/ct start - Start the game. Player and hunter(s) must be set.");
-                sender.sendMessage(ChatColor.YELLOW + "/ct stop - Stops the game.");
-                sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<gold>-----------------Compass Tracker-----------------</gold>"));
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct help - Shows this menu.</yellow>"));
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct setplayer <player> - Set player to be tracked.</yellow>"));
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct removeplayer - Remove player from being tracked.</yellow>"));
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct addhunter - Add player to hunter list. Hunters will get the tracking compass.</yellow>"));
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct removehunter - Remove hunter from list.</yellow>"));
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct listhunters - See who the hunter(s) are.</yellow>"));
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct givecompass - Give yourself the tracking compass. Hunters only.</yellow>"));
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct start - Start the game. Player and hunter(s) must be set.</yellow>"));
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct stop - Stops the game.</yellow>"));
+                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>--------------------------------------------</yellow>"));
                 break;
             }
             case "setplayer": {
                 if (sender.hasPermission("compasstracker.setplayer")) {
                     if (compassTracker.gameManager.isGameRunning) {
-                        sender.sendMessage(ChatColor.RED + "Cannot set player. There is a game right now.");
+                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
                     } else {
-                        if (Bukkit.getPlayerExact(args[1]) != null) {
+                        Player player = Bukkit.getPlayerExact(args[1]);
+                        if (player != null) {
                             if (!compassTracker.gameManager.getGameHunters().contains(Bukkit.getPlayerExact(args[1]))) {
                                 compassTracker.gameManager.setGameSpeedrunner(Bukkit.getPlayerExact(args[1]));
-                                sender.sendMessage(ChatColor.GREEN + args[1] + " has been set as the target player.");
+                                audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.setplayer.target-player", player.getName()));
                             } else {
-                                sender.sendMessage(ChatColor.RED + "That player is a hunter! Cannot set as player.");
+                                audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.setplayer.already-hunter", null));
                             }
                         } else {
-                            sender.sendMessage(ChatColor.RED + "That player does not exist.");
+                            audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.player-does-not-exist", null));
                         }
                     }
                 } else {
-                    sender.sendMessage(ChatColor.RED + "You don't have permissions to set the player.");
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
                 }
                 break;
             }
             case "removeplayer": {
                 if (sender.hasPermission("compasstracker.removeplayer")) {
                     if (compassTracker.gameManager.isGameRunning) {
-                        sender.sendMessage(ChatColor.RED + "Cannot remove player. There is a game right now!");
+                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
                     } else {
                         if (compassTracker.gameManager.getGameSpeedrunner() == null) {
-                            sender.sendMessage(ChatColor.RED + "Cannot remove player. There is not one set.");
+                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removeplayer.no-one-set", null));
                         } else {
-                            sender.sendMessage(ChatColor.GREEN
-                                    + compassTracker
-                                    .gameManager
-                                    .getGameSpeedrunner()
-                                    .getName() + " has been removed.");
+                            String playerName = compassTracker.gameManager.getGameSpeedrunner().getName();
+                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removeplayer.removed", playerName));
                             compassTracker.gameManager.removeGameSpeedrunner();
                         }
                     }
                 } else {
-                    sender.sendMessage(ChatColor.RED + "You do not have permission remove player from being tracked.");
+                    compassTracker.getAdventure().sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
                 }
                 break;
             }
             case "addhunter": {
                 if (sender.hasPermission("compasstracker.addhunter")) {
-                    if (Bukkit.getPlayerExact(args[1]) != null) {
-                        if (compassTracker.gameManager.getGameSpeedrunner() != Bukkit.getPlayerExact(args[1])) {
-                            if (!compassTracker.gameManager.isHunterListed(Bukkit.getPlayerExact(args[1]))) {
-                                compassTracker.gameManager.addHunter(Bukkit.getPlayerExact(args[1]));
-                                sender.sendMessage(ChatColor.GREEN + args[1] + " has been added as a hunter!");
+                    Player player = Bukkit.getPlayerExact(args[1]);
+                    if (player != null) {
+                        if (compassTracker.gameManager.getGameSpeedrunner() != player) {
+                            if (!compassTracker.gameManager.isHunterListed(player)) {
+                                compassTracker.gameManager.addHunter(player);
+                                audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.addhunter.added", player.getName()));
                             } else {
-                                sender.sendMessage(ChatColor.RED + args[1] + " is already set as a hunter.");
+                                audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.addhunter.already-hunter", player.getName()));
                             }
                         } else {
-                            sender.sendMessage(ChatColor.RED + "That player is being hunted! Cannot add as a hunter.");
+                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.addhunter.target-player", null));
                         }
                     } else {
-                        sender.sendMessage(ChatColor.RED + "That player does not exist.");
+                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.player-does-not-exist", null));
                     }
                 } else {
-                    sender.sendMessage(ChatColor.RED + "You do not have permission add a hunter.");
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
                 }
                 break;
             }
             case "removehunter": {
                 if (sender.hasPermission("compasstracker.removehunter")) {
-                    if (Bukkit.getPlayerExact(args[1]) != null) {
-                        if (compassTracker.gameManager.isHunterListed(Bukkit.getPlayerExact(args[1]))) {
-                            compassTracker.gameManager.removeHunter(Bukkit.getPlayerExact(args[1]));
-                            sender.sendMessage(ChatColor.GREEN + args[1] + " has been removed as a hunter!");
+                    Player player = Bukkit.getPlayerExact(args[1]);
+                    if (player != null) {
+                        if (compassTracker.gameManager.isHunterListed(player)) {
+                            compassTracker.gameManager.removeHunter(player);
+                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removehunter.removed", player.getName()));
                         } else {
-                            sender.sendMessage(ChatColor.RED + args[1] + " is not a hunter.");
+                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removehunter.not-a-hunter", player.getName()));
                         }
                     } else {
-                        sender.sendMessage(ChatColor.RED + "That player does not exist.");
+                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.player-does-not-exist", null));
                     }
                 } else {
-                    sender.sendMessage(ChatColor.RED + "You do not have permission remove a hunter.");
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
                 }
                 break;
             }
             case "listhunters": {
                 if (!compassTracker.gameManager.getGameHunters().isEmpty()) {
-                    sender.sendMessage(ChatColor.GOLD + "-----------------Hunters-----------------");
-                    for (Player player : compassTracker.gameManager.getGameHunters()) {
-                        sender.sendMessage(ChatColor.YELLOW + player.getName());
+                    String huntersList = StringUtils.join(compassTracker.gameManager.getGameHunters(), ",");
+                    for (String line : compassTracker.getMessageList("commands.listhunters.command")) {
+                        if (line.contains("%hunters%")) {
+                            line = line.replace("%hunters%", huntersList);
+                        }
+                        audiences.sender(sender).sendMessage(miniMessage.deserialize(line));
                     }
-                    sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
                 } else {
-                    sender.sendMessage(ChatColor.RED + "There are currently no hunters.");
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands", null));
                 }
                 break;
             }
@@ -172,38 +178,37 @@ public class CommandCT implements TabExecutor {
                 if (compassTracker.gameManager.getGameHunters().contains(player)) {
                     player.getInventory().addItem(compassTracker.gameManager.trackingCompass());
                 } else {
-                    sender.sendMessage(ChatColor.RED + "You are not a hunter!");
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.givecompass.not-a-hunter", null));
                 }
                 break;
             }
             case "start": {
                 if (sender.hasPermission("compasstracker.start")) {
                     if (compassTracker.gameManager.isGameRunning) {
-                        sender.sendMessage(ChatColor.RED + "Game has started already!");
+                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
                     } else {
                         if (compassTracker.gameManager.getGameSpeedrunner() != null
                                 && compassTracker.gameManager.getGameHunters().size() >= 1) {
                             compassTracker.gameManager.startGame();
                         } else {
-                            sender.sendMessage(
-                                    ChatColor.RED + "Cannot start game. You have not set the player and/or hunter(s).");
+                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.start.not-ready", null));
                         }
                     }
                 } else {
-                    sender.sendMessage(ChatColor.RED + "You do not have permission to start the game.");
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
                 }
                 break;
             }
             case "stop": {
                 if (sender.hasPermission("compasstracker.stop")) {
                     if (!compassTracker.gameManager.isGameRunning) {
-                        sender.sendMessage(ChatColor.RED + "Game has not started yet!");
+                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-game-running", null));
                     } else {
                         compassTracker.gameManager.endGame(false);
-                        Bukkit.broadcastMessage(ChatColor.RED + "Game was stopped!");
+                        audiences.all().sendMessage(compassTracker.getMessage("game-end.stopped", null));
                     }
                 } else {
-                    sender.sendMessage(ChatColor.RED + "You do not have permission to stop the game.");
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
                 }
                 break;
             }

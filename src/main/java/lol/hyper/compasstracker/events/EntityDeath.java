@@ -18,8 +18,6 @@
 package lol.hyper.compasstracker.events;
 
 import lol.hyper.compasstracker.CompassTracker;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,15 +40,14 @@ public class EntityDeath implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             if (compassTracker.gameManager.getGameSpeedrunner().equals(player)) {
-                Bukkit.broadcastMessage(ChatColor.RED + player.getName() + " has died! The hunters win!");
+                compassTracker.getAdventure().all().sendMessage(compassTracker.getMessage("game-end.hunters-win", player.getName()));
                 compassTracker.gameManager.endGame(false);
             }
         }
         if (event.getEntity() instanceof EnderDragon) {
             Player player = event.getEntity().getKiller();
             if (player == compassTracker.gameManager.getGameSpeedrunner()) {
-                Bukkit.broadcastMessage(
-                        ChatColor.GREEN + player.getName() + " has won the game! They killed the Ender Dragon!");
+                compassTracker.getAdventure().all().sendMessage(compassTracker.getMessage("game-end.player-win", player.getName()));
                 compassTracker.gameManager.endGame(true);
             }
         }

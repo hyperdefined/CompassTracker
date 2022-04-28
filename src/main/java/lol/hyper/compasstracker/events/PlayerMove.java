@@ -23,8 +23,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.UUID;
-
 public class PlayerMove implements Listener {
 
     private final GameManager gameManager;

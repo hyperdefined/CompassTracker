@@ -18,8 +18,6 @@
 package lol.hyper.compasstracker.events;
 
 import lol.hyper.compasstracker.CompassTracker;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,9 +40,7 @@ public class PlayerLeaveJoin implements Listener {
 
         Player player = event.getPlayer();
         if (compassTracker.gameManager.getGameSpeedrunner() == player) {
-            Bukkit.broadcastMessage(ChatColor.RED
-                    + compassTracker.gameManager.getGameSpeedrunner().getName()
-                    + " has left the server! Stopping game!");
+            compassTracker.getAdventure().all().sendMessage(compassTracker.getMessage("game-end.player-leave", player.getName()));
             compassTracker.gameManager.endGame(false);
         }
     }
@@ -57,8 +53,7 @@ public class PlayerLeaveJoin implements Listener {
 
         Player player = event.getEntity();
         if (player == compassTracker.gameManager.getGameSpeedrunner()) {
-            Bukkit.broadcastMessage(ChatColor.RED
-                    + compassTracker.gameManager.getGameSpeedrunner().getName() + " has died! Stopping game!");
+            compassTracker.getAdventure().all().sendMessage(compassTracker.getMessage("game-end.player-died", player.getName()));
             compassTracker.gameManager.endGame(false);
         }
     }

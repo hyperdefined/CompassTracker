@@ -45,9 +45,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,13 +55,13 @@ public class GameManager {
     private final CompassTracker compassTracker;
 
     public final ArrayList<Player> gameHunters = new ArrayList<>();
-    String bukkitPackageName = Bukkit.getServer().getClass().getPackage().getName();
+    final String bukkitPackageName = Bukkit.getServer().getClass().getPackage().getName();
     public Player gameSpeedrunner = null;
     public Boolean isGameRunning = false;
     private long startTime;
     private AutoTrackingTask autoTrackingTask;
     public final int gameVersion;
-    public HashMap<World, Location> speedrunnerLocations = new HashMap<>();
+    public final HashMap<World, Location> speedrunnerLocations = new HashMap<>();
     public String trackingMode = null;
     private final int trackingInterval;
 
@@ -239,7 +236,7 @@ public class GameManager {
         } else {
             speedrunnerLocations.put(gameSpeedrunner.getWorld(), gameSpeedrunner.getLocation());
         }
-        Bukkit.broadcastMessage(ChatColor.GREEN + "Game has started!");
+        compassTracker.getAdventure().all().sendMessage(compassTracker.getMessage("game-start.start", null));
     }
 
     /**
@@ -286,8 +283,8 @@ public class GameManager {
             }
         }
         gameHunters.clear();
-        Bukkit.broadcastMessage(
-                ChatColor.GREEN + "Duration: " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
+        String gameDuration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        compassTracker.getAdventure().all().sendMessage(compassTracker.getMessage("game-end.duration", gameDuration));
     }
 
     /**
