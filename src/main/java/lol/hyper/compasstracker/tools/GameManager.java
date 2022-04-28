@@ -38,6 +38,7 @@ import lol.hyper.compasstracker.CompassTracker;
 import org.bukkit.*;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.CompassMeta;
@@ -309,15 +310,19 @@ public class GameManager {
      */
     public void setHuntersLodestones() {
         for (Player player : gameHunters) {
-            for (ItemStack item : player.getInventory().getContents()) {
+            Inventory playerInventory = player.getInventory();
+            for (int i = 0; i < playerInventory.getSize(); i++) {
+                ItemStack item = playerInventory.getItem(i);
                 if (item != null) {
                     if (item.getType() == Material.COMPASS) {
-                        ItemMeta itemMeta = item.getItemMeta();
-                        if (itemMeta.getDisplayName().equalsIgnoreCase("Tracking Compass")) {
+                        if (checkCompass(player, i)) {
+                            ItemMeta itemMeta = item.getItemMeta();
                             CompassMeta compassMeta = (CompassMeta) itemMeta;
-                            compassMeta.setLodestoneTracked(false);
-                            compassMeta.setLodestone(getSpeedrunnerLocation(player.getWorld()));
-                            item.setItemMeta(compassMeta);
+                            if (compassMeta != null) {
+                                compassMeta.setLodestoneTracked(false);
+                                compassMeta.setLodestone(getSpeedrunnerLocation(player.getWorld()));
+                                item.setItemMeta(compassMeta);
+                            }
                         }
                     }
                 }
