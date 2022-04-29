@@ -61,6 +61,10 @@ public final class CompassTracker extends JavaPlugin {
             this.saveResource("config.yml", true);
             logger.info("Copying default config!");
         }
+        if (!messagesFile.exists()) {
+            this.saveResource("messages.yml", true);
+            logger.info("Copying default messages!");
+        }
         loadConfig();
         gameManager = new GameManager(this);
         entityDeath = new EntityDeath(this);

@@ -30,7 +30,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CommandCT implements TabExecutor {
 
@@ -161,10 +163,12 @@ public class CommandCT implements TabExecutor {
             }
             case "listhunters": {
                 if (!compassTracker.gameManager.getGameHunters().isEmpty()) {
-                    String huntersList = StringUtils.join(compassTracker.gameManager.getGameHunters(), ",");
+                    Set<String> huntersList = new HashSet<>();
+                    compassTracker.gameManager.getGameHunters().forEach(player -> huntersList.add(player.getName()));
+                    String huntersListFinal = StringUtils.join(huntersList, ",");
                     for (String line : compassTracker.getMessageList("commands.listhunters.command")) {
                         if (line.contains("%hunters%")) {
-                            line = line.replace("%hunters%", huntersList);
+                            line = line.replace("%hunters%", huntersListFinal);
                         }
                         audiences.sender(sender).sendMessage(miniMessage.deserialize(line));
                     }

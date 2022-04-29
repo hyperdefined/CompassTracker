@@ -21,7 +21,7 @@ commands:
     no-hunters: "<red>There are no hunters</red>"
     command:
       - "<gold>-----------------Hunters-----------------</gold>"
-      - "<yellow>%hunters%</hunters>"
+      - "<yellow>%hunters%</yellow>"
       - "<gold>--------------------------------------------</gold>"
   givecompass:
     not-a-hunter: "<red>You are not a hunter!</red>"
