@@ -3,6 +3,7 @@ errors:
   no-game-running: "<red>There is not a gaming running.</red>"
   player-does-not-exist: "<red>That player does not exist.</red>"
   no-permission: "<red>You don't have permissions for this command.</red>"
+  specify-player: "<red>You need to specify a player!</red>"
 commands:
   setplayer:
     target-player: "<green>%player% has been set as the target player.</green>"

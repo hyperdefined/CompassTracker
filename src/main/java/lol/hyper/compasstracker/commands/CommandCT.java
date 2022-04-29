@@ -82,82 +82,107 @@ public class CommandCT implements TabExecutor {
                 break;
             }
             case "setplayer": {
-                if (sender.hasPermission("compasstracker.setplayer")) {
-                    if (compassTracker.gameManager.isGameRunning) {
-                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
-                    } else {
-                        Player player = Bukkit.getPlayerExact(args[1]);
-                        if (player != null) {
-                            if (!compassTracker.gameManager.getGameHunters().contains(Bukkit.getPlayerExact(args[1]))) {
-                                compassTracker.gameManager.setGameSpeedrunner(Bukkit.getPlayerExact(args[1]));
-                                audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.setplayer.target-player", player.getName()));
-                            } else {
-                                audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.setplayer.already-hunter", null));
-                            }
-                        } else {
-                            audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.player-does-not-exist", null));
-                        }
-                    }
-                } else {
+                if (!sender.hasPermission("compasstracker.setplayer")) {
                     audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
+                    return true;
+                }
+                if (compassTracker.gameManager.isGameRunning) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
+                    return true;
+                }
+                if (args.length == 1) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.specify-player", null));
+                    return true;
+                }
+                Player player = Bukkit.getPlayerExact(args[1]);
+                if (player == null) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.player-does-not-exist", null));
+                    return true;
+                }
+                if (!compassTracker.gameManager.getGameHunters().contains(player)) {
+                    compassTracker.gameManager.setGameSpeedrunner(Bukkit.getPlayerExact(args[1]));
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.setplayer.target-player", player.getName()));
+                } else {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.setplayer.already-hunter", null));
                 }
                 break;
             }
             case "removeplayer": {
-                if (sender.hasPermission("compasstracker.removeplayer")) {
-                    if (compassTracker.gameManager.isGameRunning) {
-                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
-                    } else {
-                        if (compassTracker.gameManager.getGameSpeedrunner() == null) {
-                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removeplayer.no-one-set", null));
-                        } else {
-                            String playerName = compassTracker.gameManager.getGameSpeedrunner().getName();
-                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removeplayer.removed", playerName));
-                            compassTracker.gameManager.removeGameSpeedrunner();
-                        }
-                    }
+                if (!sender.hasPermission("compasstracker.removeplayer")) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
+                    return true;
+                }
+                if (compassTracker.gameManager.isGameRunning) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
+                    return true;
+                }
+                if (args.length == 1) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.specify-player", null));
+                    return true;
+                }
+
+                if (compassTracker.gameManager.getGameSpeedrunner() == null) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removeplayer.no-one-set", null));
                 } else {
-                    compassTracker.getAdventure().sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
+                    String playerName = compassTracker.gameManager.getGameSpeedrunner().getName();
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removeplayer.removed", playerName));
+                    compassTracker.gameManager.removeGameSpeedrunner();
                 }
                 break;
             }
             case "addhunter": {
-                if (sender.hasPermission("compasstracker.addhunter")) {
-                    Player player = Bukkit.getPlayerExact(args[1]);
-                    if (player != null) {
-                        if (compassTracker.gameManager.getGameSpeedrunner() != player) {
-                            if (!compassTracker.gameManager.isHunterListed(player)) {
-                                compassTracker.gameManager.addHunter(player);
-                                audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.addhunter.added", player.getName()));
-                            } else {
-                                audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.addhunter.already-hunter", player.getName()));
-                            }
-                        } else {
-                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.addhunter.target-player", null));
-                        }
+                if (!sender.hasPermission("compasstracker.addhunter")) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
+                    return true;
+                }
+                if (compassTracker.gameManager.isGameRunning) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
+                    return true;
+                }
+                if (args.length == 1) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.specify-player", null));
+                    return true;
+                }
+                Player player = Bukkit.getPlayerExact(args[1]);
+                if (player == null) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.player-does-not-exist", null));
+                    return true;
+                }
+                if (compassTracker.gameManager.getGameSpeedrunner() != player) {
+                    if (!compassTracker.gameManager.isHunterListed(player)) {
+                        compassTracker.gameManager.addHunter(player);
+                        audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.addhunter.added", player.getName()));
                     } else {
-                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.player-does-not-exist", null));
+                        audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.addhunter.already-hunter", player.getName()));
                     }
                 } else {
-                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.addhunter.target-player", null));
                 }
                 break;
             }
             case "removehunter": {
-                if (sender.hasPermission("compasstracker.removehunter")) {
-                    Player player = Bukkit.getPlayerExact(args[1]);
-                    if (player != null) {
-                        if (compassTracker.gameManager.isHunterListed(player)) {
-                            compassTracker.gameManager.removeHunter(player);
-                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removehunter.removed", player.getName()));
-                        } else {
-                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removehunter.not-a-hunter", player.getName()));
-                        }
-                    } else {
-                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.player-does-not-exist", null));
-                    }
-                } else {
+                if (!sender.hasPermission("compasstracker.removehunter")) {
                     audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
+                    return true;
+                }
+                if (compassTracker.gameManager.isGameRunning) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
+                    return true;
+                }
+                if (args.length == 1) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.specify-player", null));
+                    return true;
+                }
+                Player player = Bukkit.getPlayerExact(args[1]);
+                if (player == null) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.player-does-not-exist", null));
+                    return true;
+                }
+                if (compassTracker.gameManager.isHunterListed(player)) {
+                    compassTracker.gameManager.removeHunter(player);
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removehunter.removed", player.getName()));
+                } else {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.removehunter.not-a-hunter", player.getName()));
                 }
                 break;
             }
@@ -173,7 +198,7 @@ public class CommandCT implements TabExecutor {
                         audiences.sender(sender).sendMessage(miniMessage.deserialize(line));
                     }
                 } else {
-                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands", null));
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.listhunters.no-hunters", null));
                 }
                 break;
             }
@@ -187,33 +212,33 @@ public class CommandCT implements TabExecutor {
                 break;
             }
             case "start": {
-                if (sender.hasPermission("compasstracker.start")) {
-                    if (compassTracker.gameManager.isGameRunning) {
-                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
-                    } else {
-                        if (compassTracker.gameManager.getGameSpeedrunner() != null
-                                && compassTracker.gameManager.getGameHunters().size() >= 1) {
-                            compassTracker.gameManager.startGame();
-                        } else {
-                            audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.start.not-ready", null));
-                        }
-                    }
-                } else {
+                if (!sender.hasPermission("compasstracker.start")) {
                     audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
+                    return true;
+                }
+                if (compassTracker.gameManager.isGameRunning) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.game-running", null));
+                    return true;
+                }
+
+                if (compassTracker.gameManager.getGameSpeedrunner() != null && compassTracker.gameManager.getGameHunters().size() >= 1) {
+                    compassTracker.gameManager.startGame();
+                } else {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.start.not-ready", null));
                 }
                 break;
             }
             case "stop": {
-                if (sender.hasPermission("compasstracker.stop")) {
-                    if (!compassTracker.gameManager.isGameRunning) {
-                        audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-game-running", null));
-                    } else {
-                        compassTracker.gameManager.endGame(false);
-                        audiences.all().sendMessage(compassTracker.getMessage("game-end.stopped", null));
-                    }
-                } else {
+                if (!sender.hasPermission("compasstracker.stop")) {
                     audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-permission", null));
+                    return true;
                 }
+                if (!compassTracker.gameManager.isGameRunning) {
+                    audiences.sender(sender).sendMessage(compassTracker.getMessage("errors.no-game-running", null));
+                    return true;
+                }
+                compassTracker.gameManager.endGame(false);
+                audiences.all().sendMessage(compassTracker.getMessage("game-end.stopped", null));
                 break;
             }
         }
