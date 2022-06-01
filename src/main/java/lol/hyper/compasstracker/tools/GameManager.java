@@ -46,6 +46,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -258,7 +259,10 @@ public class GameManager {
         }
 
         if (compassTracker.config.getBoolean("spawn-firework-on-win") && won) {
-            spawnFirework(gameSpeedrunner);
+            ArrayList<Player> allPlayers = new ArrayList<>();
+            allPlayers.add(gameSpeedrunner);
+            allPlayers.addAll(gameHunters);
+            spawnFirework(allPlayers);
         }
 
         speedrunnerLocations.clear();
@@ -291,18 +295,26 @@ public class GameManager {
     /**
      * Spawn a nice firework.
      *
-     * @param player Player to spawn firework on.
+     * @param players Players to spawn firework on.
      */
-    private void spawnFirework(Player player) {
-        Firework firework = player.getWorld().spawn(player.getLocation(), Firework.class);
-        FireworkMeta fwmeta = firework.getFireworkMeta();
-        FireworkEffect.Builder builder = FireworkEffect.builder();
+    private void spawnFirework(ArrayList<Player> players) {
+        for (Player player : players) {
+            Location location = player.getLocation();
+            int fireworkDiameter = 5;
+            // spawn 3 fireworks
+            for (int i = 0; i < 3; i++) {
+                Location fireworkLocation = location.add(new Vector(Math.random() - 0.5, 0, Math.random() - 0.5).multiply(fireworkDiameter));
+                Firework firework = player.getWorld().spawn(fireworkLocation, Firework.class);
+                FireworkMeta fwmeta = firework.getFireworkMeta();
+                FireworkEffect.Builder builder = FireworkEffect.builder();
 
-        fwmeta.addEffect(builder.withColor(Color.BLUE).flicker(true).build());
-        fwmeta.addEffect(builder.trail(true).build());
-        fwmeta.addEffect(builder.withFade(Color.RED).build());
-        fwmeta.setPower(0);
-        firework.setFireworkMeta(fwmeta);
+                fwmeta.addEffect(builder.withColor(Color.BLUE).flicker(true).build());
+                fwmeta.addEffect(builder.trail(true).build());
+                fwmeta.addEffect(builder.withFade(Color.RED).build());
+                fwmeta.setPower(0);
+                firework.setFireworkMeta(fwmeta);
+            }
+        }
     }
 
     /**
