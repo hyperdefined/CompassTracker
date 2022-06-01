@@ -277,10 +277,11 @@ public class GameManager {
         for (Player hunter : gameHunters) {
             PlayerInventory inv = hunter.getInventory();
             for (int i = 0; i < inv.getSize(); i++) {
-                if (inv.getItem(i) == null) {
+                ItemStack currentItem = inv.getItem(i);
+                if (currentItem == null) {
                     continue;
                 }
-                if (inv.getItem(i).getType() == Material.COMPASS) {
+                if (currentItem.getType() == Material.COMPASS) {
                     if (checkCompass(hunter, i)) {
                         inv.setItem(i, new ItemStack(Material.AIR));
                     }
