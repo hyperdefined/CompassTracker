@@ -45,11 +45,8 @@ public class EntityDeath implements Listener {
             }
         }
         if (event.getEntity() instanceof EnderDragon) {
-            Player player = event.getEntity().getKiller();
-            if (player == compassTracker.gameManager.getGameSpeedrunner()) {
-                compassTracker.getAdventure().all().sendMessage(compassTracker.getMessage("game-end.player-win", player.getName()));
-                compassTracker.gameManager.endGame(true);
-            }
+            compassTracker.getAdventure().all().sendMessage(compassTracker.getMessage("game-end.player-win", compassTracker.gameManager.gameSpeedrunner.getName()));
+            compassTracker.gameManager.endGame(true);
         }
     }
 }
