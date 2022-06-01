@@ -43,6 +43,6 @@ game-end:
   player-win: "<green>%player% has won the game! They killed the Ender Dragon!</green>"
 
 game-start:
-  start: "</green>Game has started!</green>"
+  start: "<green>Game has started!</green>"
 
 version: 1

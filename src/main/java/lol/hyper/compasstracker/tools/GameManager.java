@@ -35,6 +35,7 @@
 package lol.hyper.compasstracker.tools;
 
 import lol.hyper.compasstracker.CompassTracker;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.*;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -66,6 +67,7 @@ public class GameManager {
     public final HashMap<World, Location> speedrunnerLocations = new HashMap<>();
     public String trackingMode = null;
     private final int trackingInterval;
+    private BukkitAudiences audiences;
 
     public GameManager(CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
@@ -83,6 +85,7 @@ public class GameManager {
             endGame(false);
         }
         trackingInterval = compassTracker.config.getInt("auto-tracking-interval");
+        this.audiences = compassTracker.getAdventure();
     }
 
     /**
@@ -238,7 +241,7 @@ public class GameManager {
         } else {
             speedrunnerLocations.put(gameSpeedrunner.getWorld(), gameSpeedrunner.getLocation());
         }
-        compassTracker.getAdventure().all().sendMessage(compassTracker.getMessage("game-start.start", null));
+        audiences.all().sendMessage(compassTracker.getMessage("game-start.start", null));
     }
 
     /**
@@ -290,7 +293,7 @@ public class GameManager {
         }
         gameHunters.clear();
         String gameDuration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-        compassTracker.getAdventure().all().sendMessage(compassTracker.getMessage("game-end.duration", gameDuration));
+        audiences.all().sendMessage(compassTracker.getMessage("game-end.duration", gameDuration));
     }
 
     /**

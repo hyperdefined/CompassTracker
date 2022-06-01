@@ -65,7 +65,7 @@ public class PlayerInteract implements Listener {
                         speedrunnerLocation = compassTracker.gameManager.getSpeedrunnerLocation(null);
                         player.setCompassTarget(speedrunnerLocation);
                     }
-                    compassTracker.getAdventure().sender(player).sendMessage(compassTracker.getMessage("compass-right-click.updating-location", player.getName()));
+                    compassTracker.getAdventure().sender(player).sendMessage(compassTracker.getMessage("compass-right-click.updating-location", compassTracker.gameManager.gameSpeedrunner.getName()));
                 } else {
                     compassTracker.getAdventure().sender(player).sendMessage(compassTracker.getMessage("compass-right-click.no-player-set", null));
                 }

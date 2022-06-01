@@ -100,7 +100,7 @@ public class CommandCT implements TabExecutor {
                     return true;
                 }
                 if (!compassTracker.gameManager.getGameHunters().contains(player)) {
-                    compassTracker.gameManager.setGameSpeedrunner(Bukkit.getPlayerExact(args[1]));
+                    compassTracker.gameManager.setGameSpeedrunner(player);
                     audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.setplayer.target-player", player.getName()));
                 } else {
                     audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.setplayer.already-hunter", null));
