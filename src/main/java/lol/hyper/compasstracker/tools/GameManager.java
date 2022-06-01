@@ -63,7 +63,7 @@ public class GameManager {
     public final ArrayList<Player> gameHunters = new ArrayList<>();
     final String bukkitPackageName = Bukkit.getServer().getClass().getPackage().getName();
     public Player gameSpeedrunner = null;
-    public Boolean isGameRunning = false;
+    public boolean isGameRunning = false;
     private long startTime;
     private AutoTrackingTask autoTrackingTask;
     public final int gameVersion;
