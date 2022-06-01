@@ -18,6 +18,7 @@
 package lol.hyper.compasstracker.events;
 
 import lol.hyper.compasstracker.CompassTracker;
+import lol.hyper.compasstracker.tools.GameManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -41,7 +42,7 @@ public class PlayerInteract implements Listener {
             return;
         }
 
-        if (compassTracker.gameManager.trackingMode.equals("AUTO")) {
+        if (compassTracker.gameManager.mode != GameManager.TrackingMode.MANUAL) {
             return;
         }
 

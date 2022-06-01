@@ -36,6 +36,8 @@ package lol.hyper.compasstracker.tools;
 
 import lol.hyper.compasstracker.CompassTracker;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -51,6 +53,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class GameManager {
@@ -65,27 +68,28 @@ public class GameManager {
     private AutoTrackingTask autoTrackingTask;
     public final int gameVersion;
     public final HashMap<World, Location> speedrunnerLocations = new HashMap<>();
-    public String trackingMode = null;
     private final int trackingInterval;
-    private BukkitAudiences audiences;
+    private final BukkitAudiences audiences;
+    public TrackingMode mode;
+
+    public enum TrackingMode {
+        AUTOMATIC,
+        MANUAL
+    }
 
     public GameManager(CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
+        this.audiences = compassTracker.getAdventure();
         String bukkitVersion = bukkitPackageName.substring(bukkitPackageName.lastIndexOf(".") + 1);
         gameVersion = Integer.parseInt(bukkitVersion.split("_")[1]);
         String mode = compassTracker.config.getString("tracking-mode");
-        if (mode.equalsIgnoreCase("manual")) {
-            trackingMode = "MANUAL";
-        }
-        if (mode.equalsIgnoreCase("auto")) {
-            trackingMode = "AUTO";
-        }
-        if (trackingMode == null) {
-            compassTracker.logger.warning("Invalid tracking mode!");
-            endGame(false);
+        if (mode == null || mode.isEmpty()) {
+            audiences.all().sendMessage(Component.text("tracking-mode is not set correctly! Current value is: " + mode + ". Defaulting to auto.").color(NamedTextColor.RED));
+            this.mode = TrackingMode.AUTOMATIC;
+        } else {
+            this.mode = TrackingMode.valueOf(mode.toUpperCase(Locale.ROOT));
         }
         trackingInterval = compassTracker.config.getInt("auto-tracking-interval");
-        this.audiences = compassTracker.getAdventure();
     }
 
     /**
@@ -235,7 +239,7 @@ public class GameManager {
             player.setSaturation(20);
             player.getInventory().addItem(trackingCompass());
         }
-        if (trackingMode.equals("AUTO")) {
+        if (mode == TrackingMode.AUTOMATIC) {
             autoTrackingTask = new AutoTrackingTask(this);
             autoTrackingTask.runTaskTimer(compassTracker, 0, 20L * trackingInterval);
         } else {
@@ -257,7 +261,7 @@ public class GameManager {
      * Ends the game.
      */
     public void endGame(boolean won) {
-        if (trackingMode.equals("AUTO")) {
+        if (mode == TrackingMode.AUTOMATIC) {
             autoTrackingTask.cancel();
         }
 
