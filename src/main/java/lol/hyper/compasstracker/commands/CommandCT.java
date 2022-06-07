@@ -20,7 +20,6 @@ package lol.hyper.compasstracker.commands;
 import lol.hyper.compasstracker.CompassTracker;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -32,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Set;;
 
 public class CommandCT implements TabExecutor {
 
@@ -190,7 +189,7 @@ public class CommandCT implements TabExecutor {
                 if (!compassTracker.gameManager.getGameHunters().isEmpty()) {
                     Set<String> huntersList = new HashSet<>();
                     compassTracker.gameManager.getGameHunters().forEach(player -> huntersList.add(player.getName()));
-                    String huntersListFinal = StringUtils.join(huntersList, ",");
+                    String huntersListFinal = String.join(", ", huntersList);
                     for (String line : compassTracker.getMessageList("commands.listhunters.command")) {
                         if (line.contains("%hunters%")) {
                             line = line.replace("%hunters%", huntersListFinal);
