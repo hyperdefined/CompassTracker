@@ -19,7 +19,7 @@ CompassTracker is a hunter vs. speedrunner plugin. Inspired by Dream's Manhunt s
 * The game will automatically end based on certain conditions.
     * The speedrunner dies.
     * The speedrunner leaves the game.
-    * The speedrunner kills the Ender Dragon.
+    * The Ender Dragon dies.
 * Shows how long the game lasts once the game ends.
 * Very lightweight, super easy to use.
 
