@@ -19,7 +19,8 @@ package lol.hyper.compasstracker.commands;
 
 import lol.hyper.compasstracker.CompassTracker;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -49,35 +50,32 @@ public class CommandCT implements TabExecutor {
             "stop");
 
     private final BukkitAudiences audiences;
-    private final MiniMessage miniMessage;
 
     public CommandCT(CompassTracker compassTracker) {
         this.compassTracker = compassTracker;
         this.audiences = compassTracker.getAdventure();
-        this.miniMessage = compassTracker.miniMessage;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0 || sender instanceof ConsoleCommandSender) {
-            audiences.sender(sender).sendMessage(miniMessage.deserialize("<green>CompassTracker version " + compassTracker.getDescription().getVersion() + ". Created by hyperdefined.</green>"));
-            audiences.sender(sender).sendMessage(miniMessage.deserialize("<green>Use /ct help for command help.</green>"));
+            audiences.sender(sender).sendMessage(Component.text("CompassTracker version " + compassTracker.getDescription().getVersion() + ". Created by hyperdefined.").color(NamedTextColor.GREEN));
             return true;
         }
 
         switch (args[0]) {
             case "help": {
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<gold>-----------------Compass Tracker-----------------</gold>"));
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct help - Shows this menu.</yellow>"));
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct setplayer <player> - Set player to be tracked.</yellow>"));
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct removeplayer - Remove player from being tracked.</yellow>"));
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct addhunter - Add player to hunter list. Hunters will get the tracking compass.</yellow>"));
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct removehunter - Remove hunter from list.</yellow>"));
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct listhunters - See who the hunter(s) are.</yellow>"));
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct givecompass - Give yourself the tracking compass. Hunters only.</yellow>"));
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct start - Start the game. Player and hunter(s) must be set.</yellow>"));
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>/ct stop - Stops the game.</yellow>"));
-                audiences.sender(sender).sendMessage(miniMessage.deserialize("<yellow>--------------------------------------------</yellow>"));
+                audiences.sender(sender).sendMessage(Component.text("-----------------Compass Tracker-----------------").color(NamedTextColor.GOLD));
+                audiences.sender(sender).sendMessage(Component.text("/ct help - Shows this menu.").color(NamedTextColor.YELLOW));
+                audiences.sender(sender).sendMessage(Component.text("/ct setplayer <player> - Set player to be tracked.").color(NamedTextColor.YELLOW));
+                audiences.sender(sender).sendMessage(Component.text("/ct removeplayer - Remove player from being tracked.").color(NamedTextColor.YELLOW));
+                audiences.sender(sender).sendMessage(Component.text("/ct addhunter - Add player to hunter list. Hunters will get the tracking compass.").color(NamedTextColor.YELLOW));
+                audiences.sender(sender).sendMessage(Component.text("/ct removehunter - Remove hunter from list.").color(NamedTextColor.YELLOW));
+                audiences.sender(sender).sendMessage(Component.text("/ct listhunters - See who the hunter(s) are.").color(NamedTextColor.YELLOW));
+                audiences.sender(sender).sendMessage(Component.text("/ct givecompass - Give yourself the tracking compass. Hunters only.").color(NamedTextColor.YELLOW));
+                audiences.sender(sender).sendMessage(Component.text("/ct start - Start the game. Player and hunter(s) must be set.").color(NamedTextColor.YELLOW));
+                audiences.sender(sender).sendMessage(Component.text("/ct stop - Stops the game.</yellow>").color(NamedTextColor.YELLOW));
+                audiences.sender(sender).sendMessage(Component.text("--------------------------------------------").color(NamedTextColor.GOLD));
                 break;
             }
             case "setplayer": {
@@ -194,7 +192,7 @@ public class CommandCT implements TabExecutor {
                         if (line.contains("%hunters%")) {
                             line = line.replace("%hunters%", huntersListFinal);
                         }
-                        audiences.sender(sender).sendMessage(miniMessage.deserialize(line));
+                        audiences.sender(sender).sendMessage(compassTracker.miniMessage.deserialize(line));
                     }
                 } else {
                     audiences.sender(sender).sendMessage(compassTracker.getMessage("commands.listhunters.no-hunters", null));

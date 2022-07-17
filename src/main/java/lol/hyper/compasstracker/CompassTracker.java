@@ -24,6 +24,7 @@ import lol.hyper.githubreleaseapi.GitHubRelease;
 import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -147,7 +148,7 @@ public final class CompassTracker extends JavaPlugin {
         String message = messages.getString(path);
         if (message == null) {
             logger.warning(path + " is not a valid message!");
-            return miniMessage.deserialize("<red>Invalid path! " + path + "</red>");
+            return Component.text("<Invalid path! " + path).color(NamedTextColor.RED);
         }
         if (message.contains("%player%")) {
             message = message.replace("%player%", replacement.toString());
